@@ -19,7 +19,7 @@ public class RecordingModule {
 	public void openLine(){
 		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 	    if(!AudioSystem.isLineSupported(info)){
-	    	//checks to see if the line is inaccessible, if so, handles the error
+	    	//checks to sdsee if the line is inaccessible, if so, handles the error
 	    } else {
 		    try{
 		    	line = (TargetDataLine) AudioSystem.getLine(info);
