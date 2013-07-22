@@ -6,17 +6,19 @@ import java.net.MalformedURLException;
 
 import javax.sound.sampled.*;
 
-public class PlaybackModule {
+public class PlaybackModule implements Runnable {
 	
 	private Clip theClip;
 	
     public PlaybackModule(String fileName) {
             try {
-                File file = new File(fileName);
-                if (file.exists()) {
-                    theClip = AudioSystem.getClip();
-                    AudioInputStream stream = AudioSystem.getAudioInputStream(file.toURI().toURL());
-                    theClip.open(stream);
+            	
+                File file = new File("audio/" + fileName);
+                if (file.exists()) 
+                {
+	                    theClip = AudioSystem.getClip();
+	                    AudioInputStream stream = AudioSystem.getAudioInputStream(file.toURI().toURL());
+	                    theClip.open(stream);
                 }
                 else {
                     throw new RuntimeException("Sound: file not found: " + fileName);
@@ -33,25 +35,23 @@ public class PlaybackModule {
             }
             catch (LineUnavailableException e) {
                 throw new RuntimeException("Sound: Line Unavailable: " + e);
+            } finally {
+            	stop();
             }
     }
+    
     public void play(){
         theClip.setFramePosition(0);  // Must always rewind!
         theClip.loop(0);
         theClip.start();
-        while(theClip.isActive()){
-        	//This loop keeps the java file running while the audio is still playing
-        	System.out.println("Playing");
-        }
     }
-    public void loop(){
-        theClip.loop(3);
-        while(theClip.isActive()){
-        	//This loop keeps the java file running while the audio is still looping
-        	System.out.println("Looping");
-        }
-    }
+
     public void stop(){
         theClip.stop();
     }
+    
+	@Override
+	public void run() {
+		play();
+	}
 }
