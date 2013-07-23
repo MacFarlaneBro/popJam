@@ -1,18 +1,22 @@
 package pitchDetection;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import edu.emory.mathcs.jtransforms.fft.*;
 
 public class PitchDetection extends Thread {
 	
-	private byte[][] dataStorage;
 	
 	public void detect(byte[] inputArray){
-		int sampleSize = 4096;
-		byte[] inputData = new byte[sampleSize*2];
+		int sampleSize = inputArray.length;
+		System.out.println(inputArray.length);
 		double[] realArray = new double[sampleSize*2];
 		double[] magnitude = new double[sampleSize*2];
-		int[] pitches = new int[100];
-		int counter = 0;
 		int freq = 0;
 					
 //		while(((line.read(inputData, 0, sampleSize))>0))
@@ -24,7 +28,7 @@ public class PitchDetection extends Thread {
 				try{
 						for(int i = 0; i < sampleSize; i++)//The recorded byte values from the microphone are cast to doubles and stored in realArray
 						{
-								realArray[i] = (double) inputData[i];
+								realArray[i] = (double) inputArray[i];
 						}
 						
 						DoubleFFT_1D fft = new DoubleFFT_1D(sampleSize);
@@ -39,9 +43,6 @@ public class PitchDetection extends Thread {
 								realer+=2;
 								imager+=2;
 						}
-						
-						System.out.println("realNumber: " + realArray[54]);
-						System.out.println("imaginaryNumber: " + realArray[55]);
 
 						double maxMag = 0;
 						int maxIndex = -1;
@@ -53,7 +54,7 @@ public class PitchDetection extends Thread {
 										maxIndex = i;
 								}
 						}
-						System.out.println("Magnitude: " + magnitude[54]);
+						System.out.println("sampleSize: " + sampleSize);
 						System.out.println("Max Magnitude: " + maxMag);
 						System.out.println("maxIndex: " + maxIndex);
 						freq = maxIndex*44100/sampleSize;
@@ -63,23 +64,51 @@ public class PitchDetection extends Thread {
 				} catch(Exception ex){
 					ex.printStackTrace();
 				}
-				if(freq < 2000){
-					pitches[counter] = freq;
-				}
-				System.out.println(counter);
-				counter++;
+//				if(freq < 2000){
+//					pitches[counter] = freq;
+//				}
+
 //		}
-		int finalFrequency = mode(pitches);
-		
-		dataStorage[counter] = inputData;
+		//int finalFrequency = mode(pitches);
 		
 		Pitch pitch = new Pitch();
 		
-		System.out.println("Frequency: " + finalFrequency);
+		System.out.println("Frequency: " + freq);
 
-		System.out.println("FinalPitch: " + pitch.getPitch(finalFrequency));
+		System.out.println("FinalPitch: " + pitch.getPitch(freq));
 		
 //		return dataStorage;
+	}
+	
+	public byte[] wavToByte(File newFile){
+		byte[] audioBytes = null;
+		
+		ByteArrayOutputStream out = null; 
+		BufferedInputStream in = null;
+		
+		try {
+			in = new BufferedInputStream(new FileInputStream(newFile));
+			out = new ByteArrayOutputStream();
+			
+			int read;
+			byte[] output = new byte[1024];
+			while((read = in.read(output)) > 0)
+			{
+				out.write(output, 0, read);
+			}
+			out.flush();
+			audioBytes = out.toByteArray();
+			
+			in.close();
+			out.close();
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException ex){
+			ex.printStackTrace();
+		}
+		
+		return audioBytes;
 	}
 
 	

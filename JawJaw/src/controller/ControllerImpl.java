@@ -1,14 +1,20 @@
 package controller;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import pitchDetection.PitchDetection;
+import playback.PlaybackModule;
 
 import input.*;
 
 public class ControllerImpl implements Controller {
 	
 	BufferedReader bufferedReader;
+	String holder;
+	File newFile;
 	
 	public void record() throws IOException{
 		
@@ -18,18 +24,22 @@ public class ControllerImpl implements Controller {
 		
 		bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		String userEnteredName = bufferedReader.readLine();
-		String holder = userEnteredName;
+		holder = userEnteredName;
 		System.out.println("You're recording has begun, enter any character to finish");
 		
-		Runnable theRecorder = new RecordingModule(holder);
+		newFile = new File(System.getProperty("user.dir") + "/audio/" + holder + ".wav");
+		
+		Runnable theRecorder = new RecordingModule(newFile);
 		Thread recordingThread = new Thread(theRecorder);
 		recordingThread.start();
 		
 		entry = bufferedReader.readLine();
 		
-		if(entry!= null){//Need to change this due to unsafe and deprecated method stop()
-			recordingThread.interrupt();
+		if(entry!= null){
+				RecordingModule stopper = (RecordingModule) theRecorder;
+				stopper.getLine().close();
 		}
+		getPitch(newFile);
 	}
 	
 	public void play() throws IOException{
@@ -55,6 +65,11 @@ public class ControllerImpl implements Controller {
 			 }
 
 		}
+	}
+	
+	public void getPitch(File newFile){
+		PitchDetection pitch = new PitchDetection();
+		pitch.detect(pitch.wavToByte(newFile));
 	}
 
 }

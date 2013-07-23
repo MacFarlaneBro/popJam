@@ -11,19 +11,23 @@ public class RecordingModule implements Runnable{
 	
 	private TargetDataLine line = null;
 	private AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
-	private AudioFormat format = new AudioFormat(16000, 8, 1, true, true);
+	private AudioFormat format = new AudioFormat(44100, 16, 1, true, true);
 	private File newFile;
 	private DataLine.Info info;
 		
-	public RecordingModule(String trackName){
-		newFile = new File(System.getProperty("user.dir") + "/audio/" + trackName + ".wav");
+	public RecordingModule(File newFile){
+		
+		this.newFile = newFile;
 		
 	}
 	
 	public void start(){
 		openLine();
 		readLine();
-		pitchDetect(wavToByte(newFile));
+	}
+	
+	public Line getLine(){
+		return line;
 	}
 	
 	public void openLine(){
@@ -42,7 +46,7 @@ public class RecordingModule implements Runnable{
 	    }
 	}
 	
-	public void readLine(){
+	public File readLine(){
 		
 		try{
 			line.start();
@@ -57,42 +61,12 @@ public class RecordingModule implements Runnable{
 			
 			AudioSystem.write(ais, fileType, newFile);
 			
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return newFile;
 	}
-	
-	public byte[] wavToByte(File newFile){
-		byte[] audioBytes = null;
-		
-		ByteArrayOutputStream out = null; 
-		BufferedInputStream in = null;
-		
-		try {
-			in = new BufferedInputStream(new FileInputStream(newFile));
-			out = new ByteArrayOutputStream();
-			
-			int read;
-			byte[] output = new byte[1024];
-			while((read = in.read(output)) > 0)
-			{
-				out.write(output, 0, read);
-			}
-			out.flush();
-			audioBytes = out.toByteArray();
-			
-			in.close();
-			out.close();
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException ex){
-			ex.printStackTrace();
-		}
-		
-		return audioBytes;
-	}
-	
 	
 	public void pitchDetect(byte[] audioDataArray){
 		PitchDetection pitchInfo = new PitchDetection();
