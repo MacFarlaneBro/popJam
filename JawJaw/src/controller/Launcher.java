@@ -19,15 +19,14 @@ public class Launcher {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		entry = bufferedReader.readLine();
 		
-		if(entry.equals("r")){
-				
-				theControl.record();
-							
-		} else if(entry.equals("p")){
-				
-				theControl.play();
-				
-			}
+		if(entry.equals("r"))
+		{
+				theControl.record();			
+		} 
+		else if(entry.equals("p"))
+		{	
+				theControl.play();		
+		}
 		System.out.println("Done");
 		}
 	}

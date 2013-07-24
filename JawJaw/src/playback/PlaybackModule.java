@@ -15,13 +15,14 @@ public class PlaybackModule implements Runnable {
             	
                 File file = new File("audio/" + fileName);
                 if (file.exists()) 
-                {
+                {      	
+                	
 	                    theClip = AudioSystem.getClip();
 	                    AudioInputStream stream = AudioSystem.getAudioInputStream(file.toURI().toURL());
 	                    theClip.open(stream);
                 }
                 else {
-                    throw new RuntimeException("Sound: file not found: " + fileName);
+                    throw new RuntimeException("I'm sorry, I was unable to find the file " + fileName);
                 }
             }
             catch (MalformedURLException e) {

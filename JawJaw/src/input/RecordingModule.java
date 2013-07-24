@@ -34,14 +34,14 @@ public class RecordingModule implements Runnable{
 		 info = new DataLine.Info(TargetDataLine.class, format);
 	    if(!AudioSystem.isLineSupported(info)){
 	    	//checks to see if the line is inaccessible, if so, handles the error
-	    	System.out.println("I'm afraid the line is not available, I don't know what to do in this scenario");
+	    	System.out.println("I'm afraid the line is not supported, I don't know what to do in this scenario");
 	    } else {
 		    try{
 		    	line = (TargetDataLine) AudioSystem.getLine(info);
 		    	line.open(format);
 
 		    } catch (LineUnavailableException ex){
-		    	ex.printStackTrace();
+		    	System.out.println("I'm afraid the line is not available, I don't know what to do in this scenario");
 		    }
 	    }
 	}
@@ -59,6 +59,8 @@ public class RecordingModule implements Runnable{
 			System.out.println(fileType);
 			System.out.println(newFile);
 			
+			
+			
 			AudioSystem.write(ais, fileType, newFile);
 			
 			
@@ -68,7 +70,7 @@ public class RecordingModule implements Runnable{
 		return newFile;
 	}
 	
-	public void pitchDetect(byte[] audioDataArray){
+	public void pitchDetect(byte[] audioDataArray) throws IOException{
 		PitchDetection pitchInfo = new PitchDetection();
 		pitchInfo.detect(audioDataArray);
 	}

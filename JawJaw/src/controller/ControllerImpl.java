@@ -39,6 +39,8 @@ public class ControllerImpl implements Controller {
 				RecordingModule stopper = (RecordingModule) theRecorder;
 				stopper.getLine().close();
 		}
+		
+		while(recordingThread.isAlive()){}
 		getPitch(newFile);
 	}
 	
