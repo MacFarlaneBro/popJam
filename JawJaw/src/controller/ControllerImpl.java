@@ -41,7 +41,7 @@ public class ControllerImpl implements Controller {
 		}
 		
 		while(recordingThread.isAlive()){}
-		getPitch(newFile);
+		//getPitch(newFile);
 	}
 	
 	public void play() throws IOException{
@@ -71,7 +71,7 @@ public class ControllerImpl implements Controller {
 	
 	public void getPitch(File newFile){
 		PitchDetection pitch = new PitchDetection();
-		pitch.detect(pitch.wavToByte(newFile));
+//		pitch.detect(pitch.wavToByte(newFile));
 	}
 
 }

@@ -5,6 +5,7 @@ import java.io.*;
 import javax.sound.sampled.*;
 
 import pitchDetection.PitchDetection;
+import pitchDetection.PitchDetectionOriginal;
 
 
 public class RecordingModule implements Runnable{
@@ -53,6 +54,9 @@ public class RecordingModule implements Runnable{
 			
 			System.out.println("Start recording");
 			
+//			PitchDetectionOriginal pitch = new PitchDetectionOriginal(line);
+//			pitch.detect();
+			
 			AudioInputStream ais = new AudioInputStream(line);
 			
 			System.out.println(ais);
@@ -70,10 +74,7 @@ public class RecordingModule implements Runnable{
 		return newFile;
 	}
 	
-	public void pitchDetect(byte[] audioDataArray) throws IOException{
-		PitchDetection pitchInfo = new PitchDetection();
-		pitchInfo.detect(audioDataArray);
-	}
+
 
 	@Override
 	public void run() {
