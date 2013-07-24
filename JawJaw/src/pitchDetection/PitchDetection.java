@@ -15,14 +15,13 @@ public class PitchDetection extends Thread {
 	
 	
 	private TargetDataLine line;
-	private byte[][] dataStorage;
-	
-	
-	public PitchDetection(){
-			detectLoop();
-	}
+	private int sampleSize = 4096;
+	private	Pitch pitch = new Pitch();
+
+
 	
 	public void detect(byte[] inputArray){
+		
 		int sampleSize = inputArray.length;
 		System.out.println(inputArray.length);
 		double[] realArray = new double[sampleSize*2];
@@ -99,26 +98,22 @@ public class PitchDetection extends Thread {
 	
 	
 	
-	public byte[][] detectLoop(){
-		int sampleSize = 4096;
+	public void detectLoop(byte[][] input){
+		
 		byte[] inputData = new byte[sampleSize*2];
 		double[] realArray = new double[sampleSize*2];
 		double[] magnitude = new double[sampleSize*2];
-		int[] pitches = new int[100];
+		int[] pitches = new int[input.length];
 		int counter = 0;
 		int freq = 0;
 		
 				
-		while(((line.read(inputData, 0, sampleSize))>0))
-		{
-			if(counter == 99){
-				break;
-			}
-				
+		while(counter!= input.length)
+		{		
 				try{
 						for(int i = 0; i < sampleSize; i++)//The recorded byte values from the microphone are cast to doubles and stored in realArray
 						{
-								realArray[i] = (double) inputData[i];
+								realArray[i] = (double) input[counter][i];
 						}
 						
 						DoubleFFT_1D fft = new DoubleFFT_1D(sampleSize);
@@ -152,6 +147,7 @@ public class PitchDetection extends Thread {
 						System.out.println("maxIndex: " + maxIndex);
 						freq = maxIndex*44100/sampleSize;
 						System.out.println("Frequency: " + freq);
+						System.out.println(pitch.getPitch(freq));
 						
 				
 				} catch(Exception ex){
@@ -165,14 +161,12 @@ public class PitchDetection extends Thread {
 		}
 		int finalFrequency = mode(pitches);
 		
-		
-		Pitch pitch = new Pitch();
+
 		
 		System.out.println("Frequency: " + finalFrequency);
 
 		System.out.println("FinalPitch: " + pitch.getPitch(finalFrequency));
 		
-		return dataStorage;
 	}
 	
 	
@@ -204,12 +198,18 @@ public class PitchDetection extends Thread {
 		} catch (IOException ex){
 			ex.printStackTrace();
 		}
-		byte[][] returner = new byte[audioBytes.length/1024][1024];
+		System.out.println(audioBytes.length);
+		System.out.println(sampleSize);
+		System.out.println(audioBytes.length/sampleSize);
+		
+		byte[][] returner = new byte[(audioBytes.length/sampleSize)][sampleSize];
+		
 		int j = 0;
 		int i = 0;
-		while(i != audioBytes.length)//These two loops separate the single enormous output byte array from the wav file into a matrix of 1024 samples to allow for easier processing by the pitch detector
+		
+		while(i < (audioBytes.length-sampleSize))//These two loops separate the single enormous output byte array from the wav file into a matrix of 1024 samples to allow for easier processing by the pitch detector
 		{
-				for(int n = 0; n <= 1024; n++)
+				for(int n = 0; n < sampleSize; n++)
 				{
 						returner[j][n] = audioBytes[i];
 						i++;
