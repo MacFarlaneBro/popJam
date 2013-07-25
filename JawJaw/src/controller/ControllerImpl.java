@@ -71,7 +71,7 @@ public class ControllerImpl implements Controller {
 	
 	public void getPitch(File newFile){
 		PitchDetection pitch = new PitchDetection();
-		pitch.detectLoop(pitch.wavToByte(newFile));
+		pitch.detect(pitch.wavToByte(newFile));
 	}
 
 }

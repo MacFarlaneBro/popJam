@@ -4,10 +4,8 @@ import java.io.*;
 
 import javax.sound.sampled.*;
 
-import pitchDetection.PitchDetection;
-import pitchDetection.PitchDetectionOriginal;
 
-
+//running the recording module as a thread allows the stopping of recording with no busywaiting
 public class RecordingModule implements Runnable{
 	
 	private TargetDataLine line = null;
@@ -16,10 +14,9 @@ public class RecordingModule implements Runnable{
 	private File newFile;
 	private DataLine.Info info;
 		
-	public RecordingModule(File newFile){
-		
+	//assigning the user named and generated file to be recorded to
+	public RecordingModule(File newFile){	
 		this.newFile = newFile;
-		
 	}
 	
 	public void start(){
@@ -38,6 +35,7 @@ public class RecordingModule implements Runnable{
 	    	System.out.println("I'm afraid the line is not supported, I don't know what to do in this scenario");
 	    } else {
 		    try{
+		    	//finds the available microphone input line and opens it without beginning recording
 		    	line = (TargetDataLine) AudioSystem.getLine(info);
 		    	line.open(format);
 
@@ -50,21 +48,15 @@ public class RecordingModule implements Runnable{
 	public File readLine(){
 		
 		try{
-			line.start();
-			
+			line.start();		
 			System.out.println("Start recording");
-			
-//			PitchDetectionOriginal pitch = new PitchDetectionOriginal(line);
-//			pitch.detect();
-			
 			AudioInputStream ais = new AudioInputStream(line);
 			
 			System.out.println(ais);
 			System.out.println(fileType);
 			System.out.println(newFile);
 			
-			
-			
+			//the user named file is written to
 			AudioSystem.write(ais, fileType, newFile);
 			
 			

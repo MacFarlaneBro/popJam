@@ -214,7 +214,8 @@ public class Pitch {
 		}
 		else if(pitch >= 1614.6) return "Note above range!";//G6 is, according to the Guinness Book of Records, the highest note ever scored for human voice
 		
-		else return "Note Below Range!";
+		//else if(pitch <= 80) return "Note Below Range!";
+		return "";
 	}
 	
 }

@@ -7,100 +7,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javax.sound.sampled.TargetDataLine;
 
 import edu.emory.mathcs.jtransforms.fft.*;
 
-public class PitchDetection extends Thread {
+public class PitchDetection{
 	
-	
-	private TargetDataLine line;
 	private int sampleSize = 4096;
 	private	Pitch pitch = new Pitch();
-
-
-	
-	public void detect(byte[] inputArray){
-		
-		int sampleSize = inputArray.length;
-		System.out.println(inputArray.length);
-		double[] realArray = new double[sampleSize*2];
-		double[] magnitude = new double[sampleSize*2];
-		int freq = 0;
-		Filters filter = new Filters();
-		byte[] test = filter.lowPass(inputArray, 300);
-				try{
-						for(int i = 0; i < sampleSize; i++)//The recorded byte values from the microphone are cast to doubles and stored in realArray
-						{
-								realArray[i] = (double) test[i];
-						}
-						
-						DoubleFFT_1D fft = new DoubleFFT_1D(sampleSize);
-						double[] fourierArray = new double[realArray.length];
-						int j = 0;
-						for(int i = 0; i < realArray.length; i++){
-							if(realArray[i]> 0){
-								fourierArray[j] = realArray[i];
-								j++;
-							}
-						}
-						fft.realForward(realArray);//using JTransform to perform fast fourier transform on the recorded double values (all real)
-						
-						int realer = 0;
-						int imager = 1;
-						for(int i = 0; i < sampleSize; i++)//The magnitude is calculated for the complex numbers recorded by the array
-						{
-								double real = realArray[realer];
-								double imag = realArray[imager];
-								magnitude[i] = Math.sqrt((real*real)+(imag*imag));
-								realer+=2;
-								imager+=2;
-						}
-
-						double maxMag = 0;
-						int maxIndex = -1;
-						int zeros = 0;
-						
-						for(int i=0; i < sampleSize; i++)
-						{
-							if(magnitude[i] == 0){
-								zeros++;
-							}
-						
-								if(magnitude[i] > maxMag){
-										maxMag = magnitude[i];
-										maxIndex = i;
-								}
-						}
-						System.out.println("Max Magnitude: " + maxMag);
-						System.out.println("maxIndex: " + maxIndex);
-						freq = maxIndex*44100/sampleSize;
-						System.out.println("Zero's: " + zeros);
-				
-				} catch(Exception ex){
-					ex.printStackTrace();
-				}
-//				if(freq < 2000){
-//					pitches[counter] = freq;
-//				}
-
-//		}
-		//int finalFrequency = mode(pitches);
-		
-		Pitch pitch = new Pitch();
-		
-		System.out.println("Frequency: " + freq);
-
-		System.out.println("FinalPitch: " + pitch.getPitch(freq));
-		
-//		return dataStorage;
-	}
 	
 	
-	
-	public void detectLoop(byte[][] input){
+	public void detect(byte[][] input){
 		
-		byte[] inputData = new byte[sampleSize*2];
 		double[] realArray = new double[sampleSize*2];
 		double[] magnitude = new double[sampleSize*2];
 		int[] pitches = new int[input.length];
@@ -111,6 +28,8 @@ public class PitchDetection extends Thread {
 		while(counter!= input.length)
 		{		
 				try{
+//						Filters filter = new Filters();
+//						byte[] postFilter = filter.lowPass(input[counter], 0);
 						for(int i = 0; i < sampleSize; i++)//The recorded byte values from the microphone are cast to doubles and stored in realArray
 						{
 								realArray[i] = (double) input[counter][i];
@@ -153,11 +72,16 @@ public class PitchDetection extends Thread {
 				} catch(Exception ex){
 					ex.printStackTrace();
 				}
-				if(freq < 2000){
+				if(freq < 2000 && freq > 80.095){
 					pitches[counter] = freq;
 				}
 				System.out.println(counter);
 				counter++;
+		}
+		
+		for(int i = 0; i < pitches.length; i++)
+		{
+				System.out.print(pitch.getPitch(pitches[i]) + ", ");
 		}
 		int finalFrequency = mode(pitches);
 		
