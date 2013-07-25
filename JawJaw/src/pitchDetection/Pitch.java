@@ -2,7 +2,7 @@ package pitchDetection;
 
 public class Pitch {
 	
-	public String getPitch(int pitch){
+	public String getPitch(float pitch){
 		
 		if(pitch >= 80.095 && pitch < 84.86)
 		{

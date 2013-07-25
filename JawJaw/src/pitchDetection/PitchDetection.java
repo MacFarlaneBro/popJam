@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import pitchCorrection.PitchCorrection;
+
 
 import edu.emory.mathcs.jtransforms.fft.*;
 
@@ -20,9 +22,9 @@ public class PitchDetection{
 		
 		double[] realArray = new double[sampleSize*2];
 		double[] magnitude = new double[sampleSize*2];
-		int[] pitches = new int[input.length];
+		float[] pitches = new float[input.length];
 		int counter = 0;
-		int freq = 0;
+		float freq = 0;
 		
 				
 		while(counter!= input.length)
@@ -64,7 +66,7 @@ public class PitchDetection{
 						System.out.println("Magnitude: " + magnitude[54]);
 						System.out.println("Max Magnitude: " + maxMag);
 						System.out.println("maxIndex: " + maxIndex);
-						freq = maxIndex*44100/sampleSize;
+						freq = maxIndex*(44100/sampleSize);//This must be focused on to determine what part of it needs to come first
 						System.out.println("Frequency: " + freq);
 						System.out.println(pitch.getPitch(freq));
 						
@@ -83,9 +85,11 @@ public class PitchDetection{
 		{
 				System.out.print(pitch.getPitch(pitches[i]) + ", ");
 		}
-		int finalFrequency = mode(pitches);
 		
-
+		PitchCorrection pitchCorrector = new PitchCorrection();
+		pitchCorrector.correct(pitches);
+		
+		float finalFrequency = mode(pitches);
 		
 		System.out.println("Frequency: " + finalFrequency);
 
@@ -144,7 +148,7 @@ public class PitchDetection{
 	}
 
 	
-	public int mode(int[] pitches)
+	public float mode(float[] pitches)
 	{
 			Mode mode = new Mode();
 			return mode.getMode(pitches);
