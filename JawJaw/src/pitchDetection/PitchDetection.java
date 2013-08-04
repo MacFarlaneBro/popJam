@@ -111,18 +111,20 @@ public class PitchDetection{
 			out = new ByteArrayOutputStream();
 			
 			int read;
-			byte[] output = new byte[1024];
-			while((read = in.read(output)) > 0)
+			byte[] intermediate = new byte[1024];
+			
+			//the input file is converted into a byte array
+			while((read = in.read(intermediate)) > 0)
 			{
-				out.write(output, 0, read);
+				out.write(intermediate, 0, read);
 			}
-			out.flush();
+			//out.flush();
 			audioBytes = out.toByteArray();
 			in.close();
 			out.close();
 			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
 		} catch (IOException ex){
 			ex.printStackTrace();
 		}
@@ -130,18 +132,19 @@ public class PitchDetection{
 		System.out.println(sampleSize);
 		System.out.println(audioBytes.length/sampleSize);
 		
-		byte[][] returner = new byte[(audioBytes.length/sampleSize)][sampleSize];
+		byte[][] returner = new byte[(audioBytes.length/sampleSize)*4][sampleSize];//the index of the matrix is multiplied by 4 to account for the 75% window overlap implemented to account for smearing and accurate phase derivation calculation
 		
 		int j = 0;
 		int i = 0;
 		
-		while(i < (audioBytes.length-sampleSize))//These two loops separate the single enormous output byte array from the wav file into a matrix of 1024 samples to allow for easier processing by the pitch detector
+		while(i < (audioBytes.length-sampleSize))//These two loops separate the single enormous output byte array from the wav file into a matrix of 1024 byte samples to allow for easier processing by the pitch detector
 		{
 				for(int n = 0; n < sampleSize; n++)
 				{
 						returner[j][n] = audioBytes[i];
 						i++;
 				}
+				i = i-((sampleSize/4)*3);//creates a sample window overlap of 75%
 				j++;
 		}	
 		return returner;
