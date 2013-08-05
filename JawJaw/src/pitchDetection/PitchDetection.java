@@ -15,6 +15,7 @@ import edu.emory.mathcs.jtransforms.fft.*;
 public class PitchDetection{
 	
 	private int sampleSize = 4096;
+	private int sampleRate = 44100;
 	private	Pitch pitch = new Pitch();
 	
 	
@@ -22,6 +23,8 @@ public class PitchDetection{
 		
 		double[] realArray = new double[sampleSize*2];
 		double[] magnitude = new double[sampleSize*2];
+		double[] phase = new double[sampleSize*2];
+		double[] trueFreq = new double[sampleSize*2];
 		float[] pitches = new float[input.length];
 		int counter = 0;
 		float freq = 0;
@@ -45,29 +48,37 @@ public class PitchDetection{
 						{
 								double real = realArray[realer];
 								double imag = realArray[imager];
-								magnitude[i] = Math.sqrt((real*real)+(imag*imag));
+								magnitude[i] = Math.sqrt((real*real)+(imag*imag));//sinusoid amplitude calculation
+								phase[i] = Math.atan2(real, imag);//sinusoid phase calculation
 								realer+=2;
 								imager+=2;
+								trueFreq[i] = (sampleRate/sampleRate)*(i+phase[i]*4/(2*Math.PI))*100;//True frequency calculated using phase difference as bearing point, results have been coming out as two orders of magnitude too low, unsure why
 						}
 						
-						System.out.println("realNumber: " + realArray[54]);
-						System.out.println("imaginaryNumber: " + realArray[55]);
+						System.out.println("realNumber (cosine): " + realArray[54]);
+						System.out.println("imaginaryNumber (sine): " + realArray[55]);
 
 						double maxMag = 0;
 						int maxIndex = -1;
+						double maxPhase = 0;
+						double maxTrueFreq = 0;
 						
 						for(int i=0; i < sampleSize; i++)
 						{
 								if(magnitude[i] > maxMag){
 										maxMag = magnitude[i];
 										maxIndex = i;
+										maxPhase = phase[i];
+										maxTrueFreq = trueFreq[i];
 								}
 						}
 						System.out.println("Magnitude: " + magnitude[54]);
 						System.out.println("Max Magnitude: " + maxMag);
 						System.out.println("maxIndex: " + maxIndex);
-						freq = maxIndex*(44100/sampleSize);//This must be focused on to determine what part of it needs to come first
+						freq = maxIndex*(sampleRate/sampleSize);//This must be focused on to determine what part of it needs to come first
 						System.out.println("Frequency: " + freq);
+						System.out.println("True Frequency: " + maxTrueFreq);
+						System.out.println("Phase: " + maxPhase);
 						System.out.println(pitch.getPitch(freq));
 						
 				
@@ -118,7 +129,7 @@ public class PitchDetection{
 			{
 				out.write(intermediate, 0, read);
 			}
-			//out.flush();
+			
 			audioBytes = out.toByteArray();
 			in.close();
 			out.close();
