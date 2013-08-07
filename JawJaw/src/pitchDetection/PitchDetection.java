@@ -96,15 +96,37 @@ public class PitchDetection{
 		{
 				System.out.print(pitch.getPitch(pitches[i]) + ", ");
 		}
+		System.out.println("");
 		
-		PitchCorrection pitchCorrector = new PitchCorrection();
-		pitchCorrector.correct(pitches);
+		double[] modePitches = new double[25]; 
 		
-		float finalFrequency = mode(pitches);
+		int j = 0;
+		for(int i = 0; i < trueFreq.length; i++){
+			modePitches[j] = trueFreq[i];
+			j++;
+			if(j % 25 == 0){
+				j = 0;
+				double averageFreq = mode(modePitches);
+				while(j!= 25){
+					trueFreq[i] = averageFreq;
+					j++;
+				}
+				j = 0;
+			}
+		}
 		
-		System.out.println("Frequency: " + finalFrequency);
+		for(int i = 0; i < pitches.length; i++){
+			System.out.print(pitches[i] + ", ");
+		}
+				
+		//float finalFrequency = mode(pitches);
+		
+		//System.out.println("Frequency: " + finalFrequency);
 
-		System.out.println("FinalPitch: " + pitch.getPitch(finalFrequency));
+		//System.out.println("FinalPitch: " + pitch.getPitch(finalFrequency));
+		
+		PitchCorrection corrector = new PitchCorrection();
+		//corrector.correct(modePitches);
 		
 	}
 	
@@ -162,10 +184,10 @@ public class PitchDetection{
 	}
 
 	
-	public float mode(float[] pitches)
+	public double mode(double[] modePitches)
 	{
 			Mode mode = new Mode();
-			return mode.getMode(pitches);
+			return mode.getMode(modePitches);
 	}
 	
 	
