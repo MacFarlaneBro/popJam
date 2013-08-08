@@ -6,10 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import pitchCorrection.PitchCorrection;
-
-
 import edu.emory.mathcs.jtransforms.fft.*;
 
 public class PitchDetection{
@@ -22,7 +18,7 @@ public class PitchDetection{
 	private	Pitch pitch = new Pitch();
 	
 	
-	public void detect(byte[][] input){
+	public void detect(double[] input, int numberOfSamples){
 		
 		double[] realArray = new double[sampleSize*2];
 		double[] magnitude = new double[sampleSize*2];
@@ -35,14 +31,9 @@ public class PitchDetection{
 		double maxTrueFreq = 0;
 		
 				
-		while(counter!= input.length)
+		while(counter!= numberOfSamples)
 		{		
 				try{
-
-						for(int i = 0; i < sampleSize; i++)//The recorded byte values from the microphone are cast to doubles and stored in realArray
-						{
-								realArray[i] = (double) input[counter][i];
-						}
 						
 						DoubleFFT_1D fft = new DoubleFFT_1D(sampleSize);
 						fft.realForward(realArray);//using JTransform to perform fast fourier transform on the recorded double values (all real)

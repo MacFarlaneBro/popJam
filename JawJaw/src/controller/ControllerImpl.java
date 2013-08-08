@@ -4,8 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import pitchCorrection.PitchCorrection;
+import pitchDetection.FileConverter;
 import pitchDetection.PitchDetection;
 import playback.PlaybackModule;
 
@@ -72,10 +71,11 @@ public class ControllerImpl implements Controller {
 	
 	public void getPitch(File newFile){
 		PitchDetection pitch = new PitchDetection();
-		PitchCorrection corrector = new PitchCorrection(1024);
-		double[] output = new double[corrector.byteToDouble(pitch.wavToByte(newFile)).length];
-		corrector.smbPitchShift(corrector.byteToDouble(pitch.wavToByte(newFile)), output, 0, output.length);
+		FileConverter converter = new FileConverter();
+		double[] convertedData = converter.getSoundData(newFile);
+		int numberOfSamples = converter.getNumberOfSamples();
 		
+		pitch.detect(convertedData, numberOfSamples);
 	}
 
 }
