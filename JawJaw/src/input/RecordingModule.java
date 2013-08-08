@@ -52,6 +52,10 @@ public class RecordingModule implements Runnable{
 			System.out.println("Start recording");
 			AudioInputStream ais = new AudioInputStream(line);
 			
+			long frameLength = ais.getFrameLength();
+			
+			System.out.println("Frame Length: " + frameLength);
+			
 			//the user named file is written to
 			AudioSystem.write(ais, fileType, newFile);
 			

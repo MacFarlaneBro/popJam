@@ -48,17 +48,6 @@ public class PitchDetection{
 						fft.realForward(realArray);//using JTransform to perform fast fourier transform on the recorded double values (all real)
 						int realer = 0;
 						int imager = 1;
-						
-						double[] cos = new double[sampleSize];
-						double[] sin = new double[sampleSize];
-						
-						for(int i = 0; i < sampleSize; i++){//separation of the real(cos) and imaginary(sin) parts of the realArray into separate arrays
-							if(i % 2 == 1){
-								sin[i] = realArray[i];
-							} else {
-								cos[i] = realArray[i];
-							}
-						}
 				
 						for(int i = 0; i < sampleSize; i++)//The magnitude is calculated for the complex numbers recorded by the array
 						{
@@ -71,7 +60,16 @@ public class PitchDetection{
 								imager+=2;
 								trueFreq[i] = bytesPerSample*(i+phase[i]*0.75/(2*Math.PI));//True frequency calculated using phase difference as bearing point, results have been coming out as two orders of magnitude too low, unsure why
 						}
-
+						double[] cos = new double[sampleSize];
+						double[] sin = new double[sampleSize];
+						
+						for(int i = 0; i < sampleSize; i++){
+							if(i % 2 == 1){
+								sin[i] = realArray[i];
+							} else {
+								cos[i] = realArray[i];
+							}
+						}
 
 						if(counter ==100)
 						{
@@ -178,7 +176,7 @@ public class PitchDetection{
 		System.out.println(sampleSize);
 		System.out.println(audioBytes.length/sampleSize);
 		
-		byte[] returner = new byte[];
+		byte[][] returner = new byte[(audioBytes.length/sampleSize)*4][sampleSize];//the index of the matrix is multiplied by 4 to account for the 75% window overlap implemented to account for smearing and accurate phase derivation calculation
 		
 		int j = 0;
 		int i = 0;
@@ -190,13 +188,10 @@ public class PitchDetection{
 						returner[j][n] = audioBytes[i];
 						i++;
 				}
+				i = i-((sampleSize/4)*3);//creates a sample window overlap of 75%
 				j++;
 		}	
 		return returner;
-	}
-	
-	public double[] windowing(byte[][]){
-		
 	}
 
 	
