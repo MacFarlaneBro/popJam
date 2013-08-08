@@ -52,10 +52,6 @@ public class RecordingModule implements Runnable{
 			System.out.println("Start recording");
 			AudioInputStream ais = new AudioInputStream(line);
 			
-			System.out.println(ais);
-			System.out.println(fileType);
-			System.out.println(newFile);
-			
 			//the user named file is written to
 			AudioSystem.write(ais, fileType, newFile);
 			
