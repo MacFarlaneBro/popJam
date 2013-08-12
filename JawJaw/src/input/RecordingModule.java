@@ -3,6 +3,8 @@ package input;
 import java.io.*;
 
 import javax.sound.sampled.*;
+import com.jsyn.unitgen.FilterHighPass;
+
 
 
 //running the recording module as a thread allows the stopping of recording with no busywaiting
@@ -51,10 +53,6 @@ public class RecordingModule implements Runnable{
 			line.start();		
 			System.out.println("Start recording");
 			AudioInputStream ais = new AudioInputStream(line);
-			
-			long frameLength = ais.getFrameLength();
-			
-			System.out.println("Frame Length: " + frameLength);
 			
 			//the user named file is written to
 			AudioSystem.write(ais, fileType, newFile);
