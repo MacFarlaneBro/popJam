@@ -14,7 +14,7 @@ import edu.emory.mathcs.jtransforms.fft.*;
 public class PitchDetection{
 	
 	private int sampleSize = 8192;
-	private int frameSize = 1024;
+	private int frameSize = 4096;
 	private int sampleRate = 44100;
 	private int oversamplingRate = 32;
 	private float[] outData = new float[frameSize];
@@ -61,9 +61,10 @@ public class PitchDetection{
 								counter = latency;
 								
 								//windowing and interleaving of imaginary and real numbers
+								//I am now windowing using a Hann function
 								for(int i = 0; i < frameSize; i++)
 								{
-										window = -0.5*Math.cos(2*Math.PI* (double) i/(double) frameSize) + 0.5; /*check this method, it may work without the casting */
+										window = 0.5 * (1- Math.cos((2 * Math.PI * i)/frameSize-1)); //check this method, it may work without the casting */
 										fourierTarget[2*i] = (float) (realArray[i] * window);
 										fourierTarget[2*i+1] = 0.f;
 								}
