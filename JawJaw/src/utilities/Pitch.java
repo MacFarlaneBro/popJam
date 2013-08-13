@@ -1,4 +1,4 @@
-package pitchDetection;
+package utilities;
 
 public class Pitch {
 	
