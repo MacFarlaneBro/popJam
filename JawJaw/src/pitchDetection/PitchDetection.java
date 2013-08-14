@@ -89,7 +89,7 @@ public class PitchDetection{
 										
 										double magnitude = 2*Math.sqrt(real*real + imag*imag);//calculate magnitude of sine
 										double phase  = Math.atan2(imag, real);//calculate phase of sine
-										System.out.println("Phase: " + phase);
+
 										//calculation of phase difference for real frequency
 										double holder = phase - prevPhase[i];//variable holder used as storage for true frequency calculations
 										prevPhase[i] = phase;
