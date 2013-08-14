@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import utilities.LowPassFilter;
 import utilities.Mode;
 import utilities.Pitch;
@@ -18,9 +17,10 @@ public class PitchDetection{
 	private int frameSize = 4096;
 	private int sampleRate = 44100;
 	private int oversamplingRate = 32;
-	int a = 0;	
+	int a = 0;
 	private float binSize = (float) sampleRate / (float) frameSize;
 	private	Pitch pitch = new Pitch();
+	private int indexHolder; //holds the index value for the maximum amplitude, allowing me to find the corresponding frequency
 	
 	
 	public void detect(double[] input, int numberOfSamples){
@@ -37,20 +37,23 @@ public class PitchDetection{
 		double maxTrueFreq = 0;
 		double maxMagnitude = 0;
 		double[] sampleArray = new double[sampleSize];	
+		double[] maxFreq = new double[frameSize];
+		double[] maxAmp = new double[frameSize];
 		
 		if(counter == 0) counter = latency;
-		
+		int marker = 0;
 		for(int k = 0; k < numberOfSamples; k++)
 		{		
 				LowPassFilter filter = new LowPassFilter();
-				fourierTarget[counter] = (float) filter.twoPointMovingAverageFilter(input[counter]);
+				fourierTarget[marker] = 
+						(float) filter.twoPointMovingAverageFilter(input[counter]);
 				counter++;
-				
+				marker++;
 						//read enough data to fill the FFT
-						if(counter>=frameSize)
+						if(marker>=frameSize)
 						{
-								counter = latency;
-								
+								counter -= latency;
+								System.out.println("Counter: " + counter);
 								window = new double[frameSize];
 								
 								for(int i = 0; i < frameSize; i++)//loop builds Hann window
@@ -58,36 +61,29 @@ public class PitchDetection{
 										window[i] = 0.5 * (1- Math.cos((2 * Math.PI * i)/(frameSize-1)));
 								}
 								
-								for(int i = 0; i < 100; i++){
-									System.out.print(fourierTarget[i] + ", ");
-								}
-								
 								for(int i = 0; i < frameSize; i++)//this loop applies the Hann window function to the data
 								{
 										fourierTarget[i] *= window[i];
 								}
-								System.out.println(" ");
-
 								
-								for(int i = 0; i < 100; i++){
-									System.out.print(fourierTarget[i] + ", ");
+								double[] complexTarget = new double[frameSize*2];
+
+								DoubleFFT_1D transform = new DoubleFFT_1D(frameSize);
+								
+								for(int i = 0; i < frameSize; i++){
+									complexTarget[2*i] = fourierTarget[i];
+									complexTarget[2*i+1] = 0;
 								}
 								
-								
-								System.out.println("Here3");
-
-								FloatFFT_1D transform = new FloatFFT_1D(frameSize);
-								
-								transform.realForward(fourierTarget);
+								transform.complexForward(complexTarget);
 
 								//Now that the transform has been performed on the array, the analysis can begin
-								
-								for(int i = 0; i < frameSize; i++)//Analysis
+								for(int i = 0; i < frameSize/2; i++)//Analysis
 								{		
 									//System.out.println(i);
 										//deinterlacing
-										float real = fourierTarget[2*i];
-										float imag = fourierTarget[2*i+1];
+										double real = complexTarget[2*i];//odd numbers are real
+										double imag = complexTarget[2*i+1];// even numbers are imaginary
 										
 										double magnitude = 2*Math.sqrt(real*real + imag*imag);//calculate magnitude of sine
 										double phase  = Math.atan2(imag, real);//calculate phase of sine
@@ -115,28 +111,37 @@ public class PitchDetection{
 										magnitudeArray[i] = (float) magnitude;
 										frequencyArray[i] = (float) trueFreq;
 								}
+								System.out.println(magnitudeArray[10]);
+								System.out.println(frequencyArray[10]);
+								
+								maxAmp[a] = maxArray(magnitudeArray);//saving the maximum values from each FFT frame
+								maxFreq[a] = frequencyArray[indexHolder];//saving the corresponding frequency
+								System.out.println(maxFreq[a]);
+								a++;
+								marker = 0;
 						}
 		}
 		
-		for(int i=0; i < frameSize; i++)
+		for(int p = 0; p < maxFreq.length; p++)
+		{
+			double[] tempFreq = new double[3];
+			double[] tempMag = new double[3];
+			int i = 0;
+			while(i < 3)
 			{
-//			System.out.println("MagnitudeArray: " + magnitudeArray[i]);
-//			System.out.println("FrequencyArray: " + frequencyArray[i]);
-					if(magnitudeArray[i] > maxMagnitude){
-							maxMagnitude = magnitudeArray[i];
-							maxTrueFreq = frequencyArray[i];
-					}
-//					System.out.println("Sample: " + sampleArray[i]);
-
+					System.out.println("Frequency: " + maxFreq[i] + ", Amplitude: " + maxAmp[i]);		
+					
+					i++;
 			}
-			System.out.println("Max Magnitude: " + maxMagnitude);
-			System.out.println("True Frequency: " + maxTrueFreq);
-			System.out.println("Pitch: " + pitch.getPitch((float)maxTrueFreq));
+			maxTrueFreq = mode(maxFreq);
+			maxMagnitude = mode(maxAmp);
+				System.out.println("Max Magnitude: " + maxMagnitude);
+				System.out.println("True Frequency: " + maxTrueFreq);
+				System.out.println("Pitch: " + pitch.getPitch((float)maxTrueFreq));
+		}
 	}
-								
-	public void detect(double input){
 		
-	}
+
 	
 	public byte[][] wavToByte(File newFile){
 		byte[] audioBytes = null;
@@ -195,10 +200,18 @@ public class PitchDetection{
 			return mode.getMode(modePitches);
 	}
 	
-	public void correct(float[] inputData, int offSet, int samplesToProcess){
+	public double maxArray(double[] input){
+		double max = 0;
+		for(int i = 0; i < input.length; i++)
+		{
+				if(input[i] > max)
+				{
+						max = input[i];
+						indexHolder = i;
+				}	
+		}
 		
-			
-		
+		return max;	
 	}
 	
 	public void autoCorrelation(int size, float[] x){
