@@ -14,7 +14,7 @@ public class Launcher {
 		Controller theControl = new ControllerImpl();
 		
 		while(!entry.equals("exit")){
-		System.out.println("Would you like to record new audio (r), play back a track? (p) or analyse pitch info? (a) (type exit to exit)");
+		System.out.println("Would you like to record new audio (r), play back a track? (p), or correct a track (c)(type exit to exit)");
 		
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		entry = bufferedReader.readLine();
@@ -27,9 +27,9 @@ public class Launcher {
 		{	
 				theControl.play();		
 		}
-		else if(entry.equals("a"))
-		{
-			theControl.analyse();
+		else if(entry.equals("c"))
+		{	
+				theControl.correct();		
 		}
 		System.out.println("Done");
 		}

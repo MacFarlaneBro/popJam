@@ -7,7 +7,6 @@ public interface Controller {
 	public void record() throws IOException;
 	
 	public void play() throws IOException;
-
-	public void analyse() throws IOException;
-		
+	
+	public void correct() throws IOException;
 }

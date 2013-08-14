@@ -4,16 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
 import pitchDetection.FileConverter;
 import pitchDetection.PitchDetection;
-import pitchDetection.PitchDetectionOriginal;
 import playback.PlaybackModule;
 
 import input.*;
@@ -73,6 +65,7 @@ public class ControllerImpl implements Controller {
 			 }
 
 		}
+		holder = null;
 	}
 	
 	public void getPitch(File newFile){
@@ -85,51 +78,19 @@ public class ControllerImpl implements Controller {
 	}
 
 	@Override
-	public void analyse() throws IOException {	
+	public void correct() throws IOException {
 		
-		Clip theClip;
+		System.out.println("Which track would you like to correct? ");
 		
-		while(!entry.equals("exit")){
-		System.out.println("Please enter the name of the audio you would like to analyse (type exit to exit)");
+		bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+		String userEnteredName = bufferedReader.readLine();
+		holder = userEnteredName;
 		
-		 bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		 entry = bufferedReader.readLine();
-		 
-		 if(entry.equals("exit")){
-			 break;
-		 } else {
-			 try{
-				PitchDetectionOriginal pitch = new PitchDetectionOriginal();
-				try {
-	            	
-	                File file = new File("audio/" + entry);
-	                if (file.exists()) 
-	                {      	
-	                	
-		                    theClip = AudioSystem.getClip();
-		                    AudioInputStream stream = AudioSystem.getAudioInputStream(file.toURI().toURL());
-		                    theClip.open(stream);
-		    				pitch.detect(pitch.wavToByte(file));
-
-	                }
-	                else {
-	                    throw new RuntimeException("I'm sorry, I was unable to find the file " + entry);
-	                }
-				
-			 } catch (RuntimeException ex){
-				 ex.printStackTrace();
-			 } catch (LineUnavailableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (UnsupportedAudioFileException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			 } finally {
-				 
-			 }
-		 }
-		}
+		newFile = new File(System.getProperty("user.dir") + "/audio/" + holder + ".wav");
+		
+		getPitch(newFile);
+		
+		holder = null;
 	}
 }
 

@@ -9,6 +9,7 @@ import java.io.IOException;
 import utilities.LowPassFilter;
 import utilities.Mode;
 import utilities.Pitch;
+import utilities.Storage;
 import edu.emory.mathcs.jtransforms.fft.*;
 
 public class PitchDetection{
@@ -23,22 +24,23 @@ public class PitchDetection{
 	private int indexHolder; //holds the index value for the maximum amplitude, allowing me to find the corresponding frequency
 	
 	
-	public void detect(double[] input, int numberOfSamples){
+	public Storage detect(double[] input, int numberOfSamples){
 		
-		float[] fourierTarget = new float[frameSize*2];
-		double[] prevPhase = new double[sampleSize];
-		double[] frequencyArray = new double[sampleSize*2];
-		double[] magnitudeArray = new double[sampleSize*2];
+
 		int counter = 0;
 		int stepSize = frameSize/oversamplingRate;
 		int latency = frameSize - stepSize;
 		double expectedPhaseDifference = 2*Math.PI* (double) stepSize/ (float) frameSize;//The average difference between phase values
 		double[] window;
-		double maxTrueFreq = 0;
-		double maxMagnitude = 0;
 		double[] sampleArray = new double[sampleSize];	
 		double[] maxFreq = new double[frameSize];
 		double[] maxAmp = new double[frameSize];
+		float[] fourierTarget = new float[frameSize*2];
+		double[] prevPhase = new double[sampleSize];
+		double[] frequencyArray = new double[sampleSize*2];
+		double[] magnitudeArray = new double[sampleSize*2];
+		String[] pitchArray;
+
 		
 		if(counter == 0) counter = latency;
 		int marker = 0;
@@ -87,7 +89,7 @@ public class PitchDetection{
 										
 										double magnitude = 2*Math.sqrt(real*real + imag*imag);//calculate magnitude of sine
 										double phase  = Math.atan2(imag, real);//calculate phase of sine
-										
+										System.out.println("Phase: " + phase);
 										//calculation of phase difference for real frequency
 										double holder = phase - prevPhase[i];//variable holder used as storage for true frequency calculations
 										prevPhase[i] = phase;
@@ -122,23 +124,25 @@ public class PitchDetection{
 						}
 		}
 		
-		for(int p = 0; p < maxFreq.length; p++)
+		pitchArray = new String[maxFreq.length];
+		for(int i = 0; maxFreq[i] != 0; i++)
 		{
-			double[] tempFreq = new double[3];
-			double[] tempMag = new double[3];
-			int i = 0;
-			while(i < 3)
-			{
-					System.out.println("Frequency: " + maxFreq[i] + ", Amplitude: " + maxAmp[i]);		
-					
-					i++;
-			}
-			maxTrueFreq = mode(maxFreq);
-			maxMagnitude = mode(maxAmp);
-				System.out.println("Max Magnitude: " + maxMagnitude);
-				System.out.println("True Frequency: " + maxTrueFreq);
-				System.out.println("Pitch: " + pitch.getPitch((float)maxTrueFreq));
+				System.out.println("Max Magnitude: " + maxAmp[i]);
+				System.out.println("True Frequency: " + maxFreq[i]);
+				System.out.println("Pitch: " + pitch.getPitch(maxFreq[i]));
+				pitchArray[i] = pitch.getPitch(maxFreq[i]);
 		}
+		
+		System.out.println("Pitches Present: ");
+		for(int i = 0; i < pitchArray.length; i++)
+		{
+				System.out.print(pitchArray[i] + ", ");
+		}
+		
+		Storage store = new Storage(magnitudeArray, frequencyArray);
+		
+		return store;
+		
 	}
 		
 
@@ -212,20 +216,5 @@ public class PitchDetection{
 		}
 		
 		return max;	
-	}
-	
-	public void autoCorrelation(int size, float[] x){
-	    float[] r = new float[size];
-	    float sum;
-
-	    for (int i=0;i<size;i++) {
-	        sum=0;
-	        for (int j=0;j<size-i;j++) {
-	            sum+=x[j]*x[j+i];
-	        }
-	        r[i]=sum;
-	    }
-	}
-	
-	
+	}	
 }

@@ -3,8 +3,6 @@ package input;
 import java.io.*;
 
 import javax.sound.sampled.*;
-import com.jsyn.unitgen.FilterHighPass;
-
 
 
 //running the recording module as a thread allows the stopping of recording with no busywaiting
