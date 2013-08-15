@@ -139,7 +139,7 @@ public class PitchDetection{
 				System.out.print(pitchArray[i] + ", ");
 		}
 		
-		Storage store = new Storage(magnitudeArray, frequencyArray);
+		Storage store = new Storage(magnitudeArray, frequencyArray, frameSize/2, pitchArray);
 		
 		return store;
 		

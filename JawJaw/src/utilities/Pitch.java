@@ -218,4 +218,115 @@ public class Pitch {
 		return "";
 	}
 	
+	public double getFrequency(String pitch){
+		
+        switch (pitch) {
+            case "E2": return 82.41;
+            
+            case "F2": return 87.31;
+            
+            case "F#2": return 92.50;
+            
+            case "G2": return 98.00;
+            
+            case "G#2": return 103.83;
+            
+            case "A2": return 110.00;
+            
+            case "A#2": return 116.54;
+            
+            case "B2": return 123.47;
+            
+            case "C3": return 130.81;
+            
+            case "C#3": return 138.59;
+            
+            case "D3": return 146.83;
+            
+            case "D#3": return 155.56;
+            
+            case "E3": return 164.81;
+            
+            case "F3": return 174.61;
+            
+            case "F#3": return 185.00;
+            
+            case "G3": return 196.00;
+            
+            case "G#3": return 207.65;
+            
+            case "A3": return 220.00;
+            
+            case "A#3": return 223.08;
+            
+            case "B3": return 246.94;
+            
+            case "C4": return 261.63;
+            
+            case "C#4": return 277.18;
+            
+            case "D4": return 293.66;
+            
+            case "D#4": return 311.13;
+            
+            case "E4": return 329.63;
+            
+            case "F4": return 349.23;
+            
+            case "F#4": return 369.99;
+            
+            case "G4": return 392.00;
+            
+            case "G#4": return 415.30;
+            
+            case "A4": return 440.00;
+            
+            case "A#4": return 466.16;
+            
+            case "B4": return 493.88;
+            
+            case "C5": return 523.25;
+            
+            case "C#5": return 554.37;
+            
+            case "D5": return 587.33;
+            
+            case "D#5": return 622.25;
+            
+            case "E5": return 659.26;
+            
+            case "F5": return 698.46;
+            
+            case "F#5": return 739.99;
+            
+            case "G5": return 783.99;
+            
+            case "G#5": return 830.61;
+            
+            case "A5": return 880.00;
+            
+            case "A#5": return 932.33;
+            
+            case "B5": return 987.77;
+            
+            case "C6": return 1046.50;
+            
+            case "C#6": return 1108.73;
+            
+            case "D6": return 1174.66;
+            
+            case "D#6": return 1244.51;
+            
+            case "E6": return 1318.51;
+            
+            case "F6": return 1396.91;
+            
+            case "F#6": return 1479.98;
+            
+            case "G6": return 1567.98;
+            
+            default : System.out.println("pitch not recognised!");
+            		return 0.00;
+        }
+	}
 }
