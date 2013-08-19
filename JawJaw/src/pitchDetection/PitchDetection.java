@@ -130,14 +130,16 @@ public class PitchDetection{
 		{
 				System.out.println("Max Magnitude: " + maxAmp[i]);
 				System.out.println("True Frequency: " + maxFreq[i]);
-				System.out.println("Pitch: " + pitch.getPitch(maxFreq[i]));
+				System.out.println("Pitch: " + pitch.getPitch(maxFreq[i]).getPitch());
 				pitchArray[i] = pitch.getPitch(maxFreq[i]);
 		}
 		
 		System.out.println("Pitches Present: ");
-		for(int i = 0; i < pitchArray.length; i++)
-		{
-				System.out.print(pitchArray[i] + ", ");
+		int i = 0;
+		while(!pitchArray[i].equals(null))
+		{	
+				System.out.print(pitchArray[i].getPitch() + ", ");
+				i++;
 		}
 		
 		Storage store = new Storage(magnitudeArray, frequencyArray, frameSize/2, pitchArray);
