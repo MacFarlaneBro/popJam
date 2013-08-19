@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import utilities.LowPassFilter;
 import utilities.Mode;
+import utilities.Note;
 import utilities.Pitch;
 import utilities.Storage;
 import edu.emory.mathcs.jtransforms.fft.*;
@@ -39,7 +40,7 @@ public class PitchDetection{
 		double[] prevPhase = new double[sampleSize];
 		double[] frequencyArray = new double[sampleSize*2];
 		double[] magnitudeArray = new double[sampleSize*2];
-		String[] pitchArray;
+		Note[] pitchArray;
 
 		
 		if(counter == 0) counter = latency;
@@ -124,7 +125,7 @@ public class PitchDetection{
 						}
 		}
 		
-		pitchArray = new String[maxFreq.length];
+		pitchArray = new Note[maxFreq.length];
 		for(int i = 0; maxFreq[i] != 0; i++)
 		{
 				System.out.println("Max Magnitude: " + maxAmp[i]);

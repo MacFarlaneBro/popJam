@@ -5,9 +5,10 @@ public class Storage {
 	private double[] magnitudes;
 	private double[] frequencies;
 	private int frameSize;
-	private String[] pitchArray;
+	private Note[] pitchArray;
+	private double[] maxFrequencies;
 	
-	public Storage(double[] magnitudes, double[] frequencies, int frameSize, String[] pitchArray){
+	public Storage(double[] magnitudes, double[] frequencies, int frameSize, Note[] pitchArray){
 		this.magnitudes = magnitudes;
 		this.frequencies = frequencies;
 		this.frameSize = frameSize;
@@ -15,12 +16,22 @@ public class Storage {
 	}
 	
 	
-	public String[] getPitchArray() {
+	public double[] getMaxFrequencies() {
+		return maxFrequencies;
+	}
+
+
+	public void setMaxFrequencies(double[] maxFrequencies) {
+		this.maxFrequencies = maxFrequencies;
+	}
+
+
+	public Note[] getPitchArray() {
 		return pitchArray;
 	}
 
 
-	public void setPitchArray(String[] pitchArray) {
+	public void setPitchArray(Note[] pitchArray) {
 		this.pitchArray = pitchArray;
 	}
 
