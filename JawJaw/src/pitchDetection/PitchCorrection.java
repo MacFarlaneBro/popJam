@@ -11,15 +11,14 @@ public class PitchCorrection {
 	private double[] desiredFrequency;
 	
 	public File correct(Storage pitch) {
-		
-		double magHolder;
-		double freqHolder;
-		double desiredFreq;
+
 		double distance;//the distance in Hz between the desired frequency and the current frequency
 		
-		frequency = pitch.getFrequencies();
-		magnitude = pitch.getMagnitudes();
-		maxFrequency = pitch.getMaxFrequencies();
+		frequency = pitch.getFrequencies();// the real frequencies of the entire sample
+		magnitude = pitch.getMagnitudes();// the real magnitudes of the entire sample
+		maxFrequency = pitch.getMaxFrequencies();// the max frequencies of the entire sample
+		
+		System.out.println(maxFrequency.length);
 		
 		Note[] holder = pitch.getPitchArray();
 		
@@ -29,21 +28,22 @@ public class PitchCorrection {
 				desiredFrequency[i] = holder[i].getFrequency();
 		}
 		
-		for(int i = 0; i < pitch.getFrameSize(); i++)
+		for(int i = 0; i < desiredFrequency.length; i++)//what is this loop doing?
 		{	
-				magHolder = magnitude[i];
-				freqHolder = maxFrequency[i];
-				desiredFreq = desiredFrequency[i];
 				
-				if(desiredFreq!= 0.0)
+				if(desiredFrequency[i]!= 0.0)
 				{
-						System.out.println("frequency: " + freqHolder);
-						System.out.println("desiredFrequency: " + desiredFreq);
+						System.out.println("frequency: " + maxFrequency[i]);
+						System.out.println("desiredFrequency: " + desiredFrequency[i]);
 		
-						if(desiredFreq > freqHolder){
-							distance = desiredFreq-freqHolder;
-						} else {
-							distance = freqHolder-desiredFreq;
+						if(desiredFrequency[i] > maxFrequency[i])
+						{
+							distance = desiredFrequency[i]-maxFrequency[i];
+							
+						} 
+						else 
+						{
+							distance = maxFrequency[i]-desiredFrequency[i];
 						}
 						
 						System.out.println(distance);

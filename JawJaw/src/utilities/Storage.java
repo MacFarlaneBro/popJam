@@ -6,23 +6,31 @@ public class Storage {
 	private double[] frequencies;
 	private int frameSize;
 	private Note[] pitchArray;
-	private double[] maxFrequencies;
+	private double[] maxFreq;
 	
-	public Storage(double[] magnitudes, double[] frequencies, int frameSize, Note[] pitchArray){
+	public Storage(double[] magnitudes, double[] frequencies, int frameSize, Note[] pitchArray, double[] maxFreq){
 		this.magnitudes = magnitudes;
 		this.frequencies = frequencies;
 		this.frameSize = frameSize;
 		this.pitchArray = pitchArray;
+		this.maxFreq = maxFreq;
 	}
 	
 	
-	public double[] getMaxFrequencies() {
+	public double[] getDesiredFrequencies() {
+		double[] maxFrequencies = new double[pitchArray.length];
+		
+		for(int i = 0; i < maxFrequencies.length; i++){
+			maxFrequencies[i] = pitchArray[i].getFrequency();
+		}
+		
 		return maxFrequencies;
 	}
-
-
-	public void setMaxFrequencies(double[] maxFrequencies) {
-		this.maxFrequencies = maxFrequencies;
+	
+	public double[] getMaxFrequencies(){
+		
+		return maxFreq;
+		
 	}
 
 
