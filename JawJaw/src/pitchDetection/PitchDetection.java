@@ -144,7 +144,7 @@ public class PitchDetection{
 				i++;
 		}
 		
-		Storage store = new Storage(magnitudeArray, frequencyArray, frameSize/2, pitchArray, maxFreq);
+		Storage store = new Storage(magnitudeArray, frequencyArray, frameSize/2, pitchArray, maxFreq, binSize, expectedPhaseDifference);
 		
 		return store;
 		

@@ -7,13 +7,17 @@ public class Storage {
 	private int frameSize;
 	private Note[] pitchArray;
 	private double[] maxFreq;
+	private double binSize;
+	private double expectedPhaseDifference;
 	
-	public Storage(double[] magnitudes, double[] frequencies, int frameSize, Note[] pitchArray, double[] maxFreq){
+	public Storage(double[] magnitudes, double[] frequencies, int frameSize, Note[] pitchArray, double[] maxFreq, double binSize, double expectedPhaseDifference){
 		this.magnitudes = magnitudes;
 		this.frequencies = frequencies;
 		this.frameSize = frameSize;
 		this.pitchArray = pitchArray;
 		this.maxFreq = maxFreq;
+		this.binSize = binSize;
+		this.setExpectedPhaseDifference(expectedPhaseDifference);
 	}
 	
 	
@@ -31,6 +35,10 @@ public class Storage {
 		
 		return maxFreq;
 		
+	}
+	
+	public double getBinSize(){
+		return binSize;
 	}
 
 
@@ -65,6 +73,16 @@ public class Storage {
 	}
 	public void setFrequencies(double[] frequencies) {
 		this.frequencies = frequencies;
+	}
+
+
+	public double getExpectedPhaseDifference() {
+		return expectedPhaseDifference;
+	}
+
+
+	public void setExpectedPhaseDifference(double expectedPhaseDifference) {
+		this.expectedPhaseDifference = expectedPhaseDifference;
 	}
 	
 	
