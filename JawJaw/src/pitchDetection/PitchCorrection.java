@@ -1,7 +1,9 @@
 package pitchDetection;
 
-import java.io.File;
+import input.RecordingModule;
 
+import java.io.*;
+import javax.sound.sampled.*;
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 import utilities.*;
 
@@ -34,8 +36,11 @@ public class PitchCorrection {
 		
 		desiredFrequency = new double[pitch.getPitchArray().length];
 		for(int i = 0; i < desiredFrequency.length; i++)
-		{
+		{		
+				if(holder[i]!= null){
 				desiredFrequency[i] = holder[i].getFrequency();
+				} else desiredFrequency[i] = 0.0;
+
 		}
 		
 		for(int i = 0; i < desiredFrequency.length; i++)//This loop calculates the disparity between actual pitch and desired pitch
@@ -43,8 +48,7 @@ public class PitchCorrection {
 				
 				if(desiredFrequency[i]!= 0.0)
 				{
-						System.out.println("frequency: " + maxFrequency[i]);
-						System.out.println("desiredFrequency: " + desiredFrequency[i]);
+
 						
 						if(desiredFrequency[i] < maxFrequency[i])
 						{
@@ -63,7 +67,6 @@ public class PitchCorrection {
 								shift(shiftValue);
 						}
 												
-						System.out.println(distance);						
 				}
 		}
 		
@@ -77,31 +80,35 @@ public class PitchCorrection {
 	{
 		int a = 0;
 		
-		while(a!= outputMagnitude.length){
-			
-			double[] outputPhase = new double[pitch.getFrameSize()];
-			for(int i = 0; i < pitch.getFrameSize(); i++){		
+			while(a!= outputMagnitude.length){
 				
-				double tempMag = outputMagnitude[i+a];
-				double tempFreq = outputFrequency[i+a];
+				double[] outputPhase = new double[pitch.getFrameSize()];
 				
+				for(int i = 0; i < pitch.getFrameSize(); i++)
+				{		
+					
+						double tempMag = outputMagnitude[i+a];
+						double tempFreq = outputFrequency[i+a];
+						
+						
+						tempFreq -= (double) i * pitch.getBinSize();// subtract mid bin frequency
+						
+						tempFreq /= pitch.getBinSize(); //get bin deviation freq
+						
+						tempFreq = 2*Math.PI*tempFreq/32;//take into account oversampling (32 is oversampling amount)
+						
+						tempFreq += (double) i*pitch.getExpectedPhaseDifference();//readd overlap phase advance
+						
+						outputPhase[i] += tempFreq;//reconstruct bin phase
+						
+						fourierTarget = new double[outputMagnitude.length];
+						
+						fourierTarget[2*i] = (float) (tempMag* Math.cos(outputPhase[i]));
+						fourierTarget[2*i+1] = (float) (tempMag*Math.sin(outputPhase[i]));
+				}
 				
-				tempFreq -= (double) i * pitch.getBinSize();// subtract mid bin frequency
-				
-				tempFreq /= pitch.getBinSize(); //get bin deviation freq
-				
-				tempFreq = 2*Math.PI*tempFreq/32;//take into account oversampling (32 is oversampling amount)
-				
-				tempFreq += (double) i*pitch.getExpectedPhaseDifference();//readd overlap phase advance
-				
-				outputPhase[i] += tempFreq;//reconstruct bin phase
-				
-				fourierTarget[2*i] = (float) (tempMag* Math.cos(outputPhase[i]));
-				fourierTarget[2*i+1] = (float) (tempMag*Math.sin(outputPhase[i]));
-				
+				a+= pitch.getFrameSize();
 			}
-			a+= pitch.getFrameSize();
-		}
 		
 		//zeroing negative frequencies
 		for(int i = pitch.getFrameSize(); i< 2*pitch.getFrameSize(); i++){
@@ -109,34 +116,61 @@ public class PitchCorrection {
 			}
 		
 		DoubleFFT_1D transform = new DoubleFFT_1D(pitch.getFrameSize()*2);
-		transform.complexInverse(fourierTarget, false);
+		transform.complexInverse(fourierTarget, false);//inverse fourier transform calculation
+		
+		finalOutput = new double[fourierTarget.length];
 		
 		for(int i = 0; i < pitch.getFrameSize()*2; i++){
-			double window = -0.5*Math.cos(2*Math.PI*(double)i/(double)pitch.getFrameSize()*2) +0.5;//de windowing or something
+			double window = -0.5*Math.cos(2*Math.PI*(double)i/(double)pitch.getFrameSize()*2) +0.5;//dewindowning
 			finalOutput[i] = 2*window*fourierTarget[2*i]/(pitch.getFrameSize()*32);
 		}
 		
 		byte[] converter = new byte[finalOutput.length];
 		
 		for(int i = 0; i < converter.length; i++){
-			converter[i] = (byte) finalOutput[i];
+			converter[i] = (byte) finalOutput[i];//double array reconverted to byte format in preparation for wav conversion
 		}
 		
 		
 		
+		File newFile = new File(pitch.getFileName() + "corrected");//new file created
+		
+		Runnable theRecorder = new RecordingModule(newFile);
+		Thread recordingThread = new Thread(theRecorder);
+		recordingThread.start();
+		
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));;
+		String entry = null;
+		try {
+			entry = bufferedReader.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(entry!= null){
+				RecordingModule stopper = (RecordingModule) theRecorder;
+				stopper.getLine().close();
+		}
+		
+		while(recordingThread.isAlive()){}
 	}
 
-	public void shift(double shiftValue){	
+	public void shift(double shiftValue){
+		
+		outputMagnitude = new double[inputMagnitude.length];
+		outputFrequency = new double[inputFrequency.length];
 		
 		for(int i = 0; i < pitch.getFrameSize(); i++){
 			int index = (int) (correctedFrames * shiftValue);
 			if(index <= pitch.getFrameSize()){
-				outputMagnitude[index] += inputMagnitude[correctedFrames];
+				outputMagnitude[index] += 
+						inputMagnitude[correctedFrames];
 				outputFrequency[index] = inputFrequency[correctedFrames] * shiftValue;
 			}
 		}
 		
 	}
+
 	
 	
 

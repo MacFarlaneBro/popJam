@@ -326,9 +326,9 @@ public class Pitch {
             case "F#6": return 1479.98;
             
             case "G6": return 1567.98;
-            
+                        
             default : System.out.println("pitch not recognised!");
-            		return 0.00;
+            		return 1.00;
         }
 	}
 }

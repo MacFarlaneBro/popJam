@@ -19,16 +19,8 @@ public class Note {
 		return pitch;
 	}
 
-	public void setPitch(String pitch) {
-		this.pitch = pitch;
-	}
 
 	public double getFrequency() {
 		return frequency;
 	}
-
-	public void setFrequency(double frequency) {
-		this.frequency = frequency;
-	}
-
 }

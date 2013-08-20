@@ -67,7 +67,6 @@ public class ControllerImpl implements Controller {
 			 }
 
 		}
-		holder = null;
 	}
 
 	@Override
@@ -97,7 +96,7 @@ public class ControllerImpl implements Controller {
 		double[] convertedData = converter.getSoundData(newFile);
 		int numberOfSamples = converter.getNumberOfSamples();
 		
-		return(pitch.detect(convertedData, numberOfSamples));
+		return(pitch.detect(convertedData, numberOfSamples, holder));
 	}
 }
 

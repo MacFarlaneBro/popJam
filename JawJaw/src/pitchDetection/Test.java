@@ -27,7 +27,7 @@ public class Test {
 			}
 		}
 		
-		d.detect(transfer,transfer.length);
+		d.detect(transfer,transfer.length, null);
 	}
 
 }

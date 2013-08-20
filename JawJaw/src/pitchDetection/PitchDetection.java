@@ -25,7 +25,7 @@ public class PitchDetection{
 	private int indexHolder; //holds the index value for the maximum amplitude, allowing me to find the corresponding frequency
 	
 	
-	public Storage detect(double[] input, int numberOfSamples){
+	public Storage detect(double[] input, int numberOfSamples, String fileName){
 		
 
 		int counter = 0;
@@ -131,7 +131,9 @@ public class PitchDetection{
 		{
 				System.out.println("Max Magnitude: " + maxAmp[i]);
 				System.out.println("True Frequency: " + maxFreq[i]);
+				if(pitch.getPitch(maxFreq[i])!= null){
 				System.out.println("Pitch: " + pitch.getPitch(maxFreq[i]).getPitch());
+				}
 				pitchArray[i] = pitch.getPitch(maxFreq[i]);
 		}
 		
@@ -140,11 +142,14 @@ public class PitchDetection{
 		int i = 0;
 		while(i!= a)
 		{	
-				System.out.print(pitchArray[i].getPitch() + ", ");
+				if(pitch.getPitch(maxFreq[i])!= null)
+				{
+						System.out.print(pitchArray[i].getPitch() + ", ");
+				}	
 				i++;
 		}
 		
-		Storage store = new Storage(magnitudeArray, frequencyArray, frameSize/2, pitchArray, maxFreq, binSize, expectedPhaseDifference);
+		Storage store = new Storage(magnitudeArray, frequencyArray, frameSize/2, pitchArray, maxFreq, binSize, expectedPhaseDifference, null);
 		
 		return store;
 		

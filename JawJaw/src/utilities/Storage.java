@@ -9,8 +9,9 @@ public class Storage {
 	private double[] maxFreq;
 	private double binSize;
 	private double expectedPhaseDifference;
+	private String fileName;
 	
-	public Storage(double[] magnitudes, double[] frequencies, int frameSize, Note[] pitchArray, double[] maxFreq, double binSize, double expectedPhaseDifference){
+	public Storage(double[] magnitudes, double[] frequencies, int frameSize, Note[] pitchArray, double[] maxFreq, double binSize, double expectedPhaseDifference, String fileName){
 		this.magnitudes = magnitudes;
 		this.frequencies = frequencies;
 		this.frameSize = frameSize;
@@ -18,6 +19,7 @@ public class Storage {
 		this.maxFreq = maxFreq;
 		this.binSize = binSize;
 		this.setExpectedPhaseDifference(expectedPhaseDifference);
+		this.setFileName(fileName);
 	}
 	
 	
@@ -83,6 +85,16 @@ public class Storage {
 
 	public void setExpectedPhaseDifference(double expectedPhaseDifference) {
 		this.expectedPhaseDifference = expectedPhaseDifference;
+	}
+
+
+	public String getFileName() {
+		return fileName;
+	}
+
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 	
 	
