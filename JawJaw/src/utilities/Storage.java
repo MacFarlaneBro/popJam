@@ -18,8 +18,8 @@ public class Storage {
 		this.pitchArray = pitchArray;
 		this.maxFreq = maxFreq;
 		this.binSize = binSize;
-		this.setExpectedPhaseDifference(expectedPhaseDifference);
-		this.setFileName(fileName);
+		this.expectedPhaseDifference = expectedPhaseDifference;
+		this.fileName = fileName;
 	}
 	
 	

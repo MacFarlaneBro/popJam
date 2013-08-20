@@ -19,9 +19,9 @@ public class RecordingModule implements Runnable{
 		this.newFile = newFile;
 	}
 	
-	public void start(){
+	public File start(){
 		openLine();
-		readLine();
+		return readLine();
 	}
 	
 	public Line getLine(){

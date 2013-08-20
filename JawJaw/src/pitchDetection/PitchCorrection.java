@@ -19,6 +19,7 @@ public class PitchCorrection {
 	private int correctedFrames = 0;
 	private Storage pitch;
 	private double[] finalOutput;
+	private File correctedFile;
 	
 	public File correct(Storage pitch) {
 		
@@ -133,27 +134,12 @@ public class PitchCorrection {
 		
 		
 		
-		File newFile = new File(pitch.getFileName() + "corrected");//new file created
+		correctedFile = new File(pitch.getFileName() + "corrected");//new file created
 		
-		Runnable theRecorder = new RecordingModule(newFile);
-		Thread recordingThread = new Thread(theRecorder);
-		recordingThread.start();
 		
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));;
-		String entry = null;
-		try {
-			entry = bufferedReader.readLine();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
-		if(entry!= null){
-				RecordingModule stopper = (RecordingModule) theRecorder;
-				stopper.getLine().close();
-		}
-		
-		while(recordingThread.isAlive()){}
 	}
+	
 
 	public void shift(double shiftValue){
 		

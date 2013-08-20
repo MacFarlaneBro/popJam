@@ -9,41 +9,46 @@ import javax.sound.sampled.*;
 public class PlaybackModule implements Runnable {
 	
 	private Clip theClip;
+	private boolean fileExists = false;
 	
     public PlaybackModule(String fileName) {
-            try {
-            	
+ 
+    	 try {
                 File file = new File("audio/" + fileName);
                 if (file.exists()) 
                 {      	
-                	
-	                    theClip = AudioSystem.getClip();
+                	fileExists = true;
+                	System.out.println("found it!");
+	                   
+							theClip = AudioSystem.getClip();
+						
 	                    AudioInputStream stream = AudioSystem.getAudioInputStream(file.toURI().toURL());
 	                    theClip.open(stream);
+	                    
                 }
                 else {
-                    throw new RuntimeException("I'm sorry, I was unable to find the file " + fileName);
+                    System.out.println("I'm sorry, I was unable to find the following file " + fileName);
                 }
-            }
-            catch (MalformedURLException e) {
-                throw new RuntimeException("Sound: Malformed URL: " + e);
-            }
-            catch (UnsupportedAudioFileException e) {
-                throw new RuntimeException("Sound: Unsupported Audio File: " + e);
-            }
-            catch (IOException e) {
-                throw new RuntimeException("Sound: Input/Output Error: " + e);
-            }
-            catch (LineUnavailableException e) {
-                throw new RuntimeException("Sound: Line Unavailable: " + e);
-            } finally {
-            	stop();
-            }
+                
+		    } catch (LineUnavailableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnsupportedAudioFileException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+
+           
     }
     
     public void play(){
-        theClip.setFramePosition(0);  // Must always rewind!
-        theClip.loop(0);
+    	
         theClip.start();
     }
 
@@ -53,6 +58,8 @@ public class PlaybackModule implements Runnable {
     
 	@Override
 	public void run() {
-		play();
+		if(fileExists){
+			play();
+		}
 	}
 }
