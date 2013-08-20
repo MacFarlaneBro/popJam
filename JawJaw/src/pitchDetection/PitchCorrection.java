@@ -3,6 +3,7 @@ package pitchDetection;
 import input.RecordingModule;
 
 import java.io.*;
+
 import javax.sound.sampled.*;
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 import utilities.*;
@@ -69,15 +70,12 @@ public class PitchCorrection {
 						}
 												
 				}
-		}
+		}	
 		
-		constructOutput();
-		
-		
-		return null;
+		return constructOutput();
 	}
 	
-	private void constructOutput()
+	private File constructOutput()
 	{
 		int a = 0;
 		
@@ -134,10 +132,21 @@ public class PitchCorrection {
 		
 		
 		
-		correctedFile = new File(pitch.getFileName() + "corrected");//new file created
+		correctedFile = new File(pitch.getFileName() + "corrected.wav");//new file created
 		
-		
-		
+
+		try {
+			FileOutputStream out = new FileOutputStream(correctedFile);
+			out.write(converter);
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return correctedFile;
 	}
 	
 
