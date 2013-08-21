@@ -26,7 +26,6 @@ public class PitchDetection{
 	
 	
 	public Storage detect(double[] input, int numberOfSamples, String fileName){
-		
 
 		int counter = 0;
 		int stepSize = frameSize/oversamplingRate;
@@ -38,8 +37,8 @@ public class PitchDetection{
 		double[] maxAmp = new double[frameSize];
 		float[] fourierTarget = new float[frameSize*2];
 		double[] prevPhase = new double[sampleSize];
-		double[] frequencyArray = new double[sampleSize*2];
-		double[] magnitudeArray = new double[sampleSize*2];
+		double[] frequencyArray = new double[input.length];
+		double[] magnitudeArray = new double[input.length];
 		Note[] pitchArray;
 
 		

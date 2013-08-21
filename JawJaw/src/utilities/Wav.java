@@ -5,18 +5,23 @@ import javax.sound.sampled.*;
 
 public class Wav{
 	
-	public static void save(byte[] data, String filename) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+	public File save(byte[] data, String filename) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
 		
 	    InputStream byteArray = new ByteArrayInputStream(data);
 	    
 	    AudioInputStream ais = new AudioInputStream(byteArray, getAudioFormat(), (long) data.length);
 	    
-	    AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File(filename));
+	    File theFile = new File(filename);
+	    
+	    AudioSystem.write(ais, AudioFileFormat.Type.WAVE, theFile);
+	    
+	    return theFile;
+	    
 	}
 
-	private static AudioFormat getAudioFormat() {
+	private AudioFormat getAudioFormat() {
 	    return new AudioFormat(
-	            441000, // sampleRate
+	            44100, // sampleRate
 	            16, // sampleSizeInBits
 	            1, // channels
 	            true, // signed

@@ -1,5 +1,8 @@
 package utilities;
 
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+
 public class Storage {
 	
 	private double[] magnitudes;
@@ -10,6 +13,9 @@ public class Storage {
 	private double binSize;
 	private double expectedPhaseDifference;
 	private String fileName;
+	private static AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
+	private static AudioFormat format = new AudioFormat(44100, 16, 1, true, true);
+	
 	
 	public Storage(double[] magnitudes, double[] frequencies, int frameSize, Note[] pitchArray, double[] maxFreq, double binSize, double expectedPhaseDifference, String fileName){
 		this.magnitudes = magnitudes;
@@ -95,6 +101,26 @@ public class Storage {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+
+	public static AudioFileFormat.Type getFileType() {
+		return fileType;
+	}
+
+
+	public static void setFileType(AudioFileFormat.Type fileType) {
+		Storage.fileType = fileType;
+	}
+
+
+	public static AudioFormat getFormat() {
+		return format;
+	}
+
+
+	public static void setFormat(AudioFormat format) {
+		Storage.format = format;
 	}
 	
 	
