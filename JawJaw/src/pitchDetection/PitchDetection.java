@@ -55,7 +55,6 @@ public class PitchDetection{
 						if(marker>=frameSize)
 						{
 								counter -= latency;
-								System.out.println("Counter: " + counter);
 								window = new double[frameSize];
 								
 								for(int i = 0; i < frameSize; i++)//loop builds Hann window
@@ -82,7 +81,6 @@ public class PitchDetection{
 								//Now that the transform has been performed on the array, the analysis can begin
 								for(int i = 0; i < frameSize/2; i++)//Analysis
 								{		
-									//System.out.println(i);
 										//deinterlacing
 										double real = complexTarget[2*i];//odd numbers are real
 										double imag = complexTarget[2*i+1];// even numbers are imaginary
@@ -113,12 +111,9 @@ public class PitchDetection{
 										magnitudeArray[i] = (float) magnitude;
 										frequencyArray[i] = (float) trueFreq;
 								}
-								System.out.println(magnitudeArray[10]);
-								System.out.println(frequencyArray[10]);
 								
 								maxAmp[a] = maxArray(magnitudeArray);//saving the maximum values from each FFT frame
 								maxFreq[a] = frequencyArray[indexHolder];//saving the corresponding frequency
-								System.out.println(maxFreq[a]);
 								a++;
 								marker = 0;
 						}
@@ -128,11 +123,11 @@ public class PitchDetection{
 		
 		for(int i = 0; maxFreq[i] != 0; i++)
 		{
-				System.out.println("Max Magnitude: " + maxAmp[i]);
-				System.out.println("True Frequency: " + maxFreq[i]);
-				if(pitch.getPitch(maxFreq[i])!= null){
-				System.out.println("Pitch: " + pitch.getPitch(maxFreq[i]).getPitch());
-				}
+//				System.out.println("Max Magnitude: " + maxAmp[i]);
+//				System.out.println("True Frequency: " + maxFreq[i]);
+//				if(pitch.getPitch(maxFreq[i])!= null){
+//				System.out.println("Pitch: " + pitch.getPitch(maxFreq[i]).getPitch());
+//				}
 				pitchArray[i] = pitch.getPitch(maxFreq[i]);
 		}
 		

@@ -1,12 +1,7 @@
 package pitchDetection;
 
-import input.RecordingModule;
-
 import java.io.*;
-
-import com.sun.media.sound.WaveFileWriter;
 import javax.sound.sampled.*;
-
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 import utilities.*;
 
@@ -19,23 +14,29 @@ public class PitchCorrection {
 	private double[] maxFrequency;
 	private double[] desiredFrequency;
 	private double[] fourierTarget;
-	
+	private double[] compiler;
 	private int correctedFrames = 0;
 	private Storage pitch;
 	private double[] finalOutput;
 	
 	public void correct(Storage pitch) {
+		
 		System.out.println("calculating pitch");
 		this.pitch = pitch;
+		
 
 		double distance;//the distance in Hz between the desired frequency and the current frequency
 		
 		inputFrequency = pitch.getFrequencies();// the real frequencies of the entire sample
 		inputMagnitude = pitch.getMagnitudes();// the real magnitudes of the entire sample
 		maxFrequency = pitch.getMaxFrequencies();// the max frequencies of the entire sample
+		for(int i = 0; i < 500; i++){
+			System.out.println("inputfrequencies: " + inputFrequency[i]);
+			System.out.println("inputMagnitudes: " + inputMagnitude[i]);
+		}
 		outputMagnitude = new double[inputMagnitude.length];
 		outputFrequency = new double[inputFrequency.length];
-		System.out.println(maxFrequency.length);
+		System.out.println("Max Frequency Array Length: " + maxFrequency.length);
 		
 		Note[] holder = pitch.getPitchArray();
 		
@@ -53,19 +54,21 @@ public class PitchCorrection {
 				
 				if(desiredFrequency[i]!= 0.0)
 				{
-
-						
+	
 						if(desiredFrequency[i] < maxFrequency[i])
-						{
+						{	
+							System.out.println("Bigger");
+
 								distance = desiredFrequency[i]-maxFrequency[i];//calculating the proportion by which every value in the array will be shifted.
 								double shiftValue = distance/maxFrequency[i];//shiftvalue is what every value in the replacement array must be multiplied by
-								shiftValue = 1+shiftValue; 
+								shiftValue = 1-shiftValue; 
 								System.out.println("ShiftValue: " + shiftValue);
 								shift(shiftValue);
 								correctedFrames+= pitch.getFrameSize();
 						} 
 						else 
 						{
+							System.out.println("Smaller");
 								distance = maxFrequency[i] - desiredFrequency[i];
 								double shiftValue = distance/maxFrequency[i];
 								shiftValue = 1+shiftValue; 
@@ -76,28 +79,36 @@ public class PitchCorrection {
 												
 				}
 		}
-		for(int i = 0; i < outputMagnitude.length; i++){
-			if(outputMagnitude[i]!= 0){
-				System.out.println(outputMagnitude[i]);
-			}
-		}
+		
+//		for(int i = 0; i < outputMagnitude.length; i++){
+//			if(outputMagnitude[i] != 0){
+//					System.out.println("Output Magnitude: " + outputMagnitude[i]);
+//					System.out.println("Output Frequency: " + outputFrequency[i]);
+//			}
+//		}
 		constructOutput();
 	}
 	
 	private void constructOutput()
-	{
+	{	
+		fourierTarget = new double[outputMagnitude.length];
+		System.out.println("Made it here!");
+		System.out.println("outputMag: " + outputMagnitude.length);
 		int a = 0;
 		
-			while(a!= outputMagnitude.length){
+			while(a < outputMagnitude.length){
 				
 				double[] outputPhase = new double[pitch.getFrameSize()];
-				
+								
+//				System.out.println();
+
 				for(int i = 0; i < pitch.getFrameSize(); i++)
 				{		
-					
+					if(i+a >= outputMagnitude.length){
+						break;
+					}
 						double tempMag = outputMagnitude[i+a];
 						double tempFreq = outputFrequency[i+a];
-						
 						
 						tempFreq -= (double) i * pitch.getBinSize();// subtract mid bin frequency
 						
@@ -108,15 +119,35 @@ public class PitchCorrection {
 						tempFreq += (double) i*pitch.getExpectedPhaseDifference();//readd overlap phase advance
 						
 						outputPhase[i] += tempFreq;//reconstruct bin phase
-						
-						fourierTarget = new double[outputMagnitude.length];
-						
-						fourierTarget[2*i] = (float) (tempMag* Math.cos(outputPhase[i]));
-						fourierTarget[2*i+1] = (float) (tempMag*Math.sin(outputPhase[i]));
+	
+						compiler = new double[pitch.getFrameSize()*2];
+						compiler[2*i] = (float) (tempMag* Math.cos(outputPhase[i]));
+						compiler[2*i+1] = (float) (tempMag*Math.sin(outputPhase[i]));
 				}
-				
+//				System.out.println(a);
+				for(int i = 0; i < pitch.getFrameSize(); i++){
+					if(a+i >= fourierTarget.length){
+						break;
+					}
+						fourierTarget[a+i] = 
+								compiler[i];
+				}
 				a+= pitch.getFrameSize();
 			}
+			int zero = 0;
+			int nonZero = 0;
+			for(int i = 0; i < fourierTarget.length; i++){
+					if(fourierTarget[i]==0){
+						zero++;
+					} else {
+						nonZero++;
+					}
+			}
+			
+			System.out.println("InputArraySize: " + inputMagnitude.length);
+			System.out.println("Zero: " + zero);
+			System.out.println("non Zero: " + nonZero);
+			System.out.println("maxFrequencies: " + maxFrequency.length);
 		
 			for(int i = 0; i < fourierTarget.length; i++){
 				if(fourierTarget[i]!= 0){
@@ -138,20 +169,6 @@ public class PitchCorrection {
 			double window =  0.5 * (1- Math.cos((2 * Math.PI * i)/(pitch.getFrameSize()-1)));;//windowing function may well work better now
 			finalOutput[i] = 2*window*fourierTarget[2*i]/(pitch.getFrameSize()*32);
 		}
-		
-		int zero = 0;
-		int nonZero = 0;
-		for(int i = 0; i < fourierTarget.length; i++){
-				if(fourierTarget[i]==0){
-					zero++;
-				} else {
-					nonZero++;
-				}
-		}
-		System.out.println("InputArraySize: " + inputMagnitude.length);
-		System.out.println("Zero: " + zero);
-		System.out.println("non Zero: " + nonZero);
-		System.out.println("maxFrequencies: " + maxFrequency.length);
 		
 		byte[] converter = new byte[finalOutput.length];
 		
@@ -178,24 +195,18 @@ public class PitchCorrection {
 	public void shift(double shiftValue){
 
 		System.out.println("shifting");
-		System.out.println(pitch.getFrameSize());
-		System.out.println(inputMagnitude.length);
+		System.out.println("");
+		System.out.println("Input Magnitude Length: " + inputMagnitude.length);
 		
 		for(int i = 0; i < pitch.getFrameSize()/2; i++){
-			System.out.println(i);
-			System.out.println(correctedFrames);
 			int index = (int) (i * shiftValue);
-			if(index <= pitch.getFrameSize()/2){
+			if(index <= pitch.getFrameSize()){
 				outputMagnitude[index] += inputMagnitude[correctedFrames];
 				outputFrequency[index] = inputFrequency[correctedFrames] * shiftValue;
+//				System.out.println("Output Magnitude: " + outputMagnitude[index]);
+//				System.out.println("Output Frequency: " + outputFrequency[index]);
 			}
 			correctedFrames++;
-		}
-		correctedFrames-= correctedFrames*(1-(1/32));
-		
+		}		
 	}
-
-	
-	
-
 }

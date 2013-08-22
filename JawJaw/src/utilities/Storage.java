@@ -14,7 +14,7 @@ public class Storage {
 	private double expectedPhaseDifference;
 	private String fileName;
 	private static AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
-	private static AudioFormat format = new AudioFormat(44100, 16, 1, true, true);
+	private static AudioFormat format = new AudioFormat(22050, 16, 1, true, true);
 	
 	
 	public Storage(double[] magnitudes, double[] frequencies, int frameSize, Note[] pitchArray, double[] maxFreq, double binSize, double expectedPhaseDifference, String fileName){
