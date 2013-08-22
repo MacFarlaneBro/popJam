@@ -3,29 +3,29 @@ package utilities;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 
-public class Storage {
+public class AudioData {
+	
+	public static final AudioFileFormat.Type FILETYPE = AudioFileFormat.Type.WAVE;
+	public static final AudioFormat FORMAT = new AudioFormat(22050, 16, 1, true, true);
+	public static final int SAMPLE_SIZE = 8096;
+	public static final int FRAME_SIZE = 4096;
+	public static final int SAMPLE_RATE = 22050;
+	public static final int OVERSAMPLING_RATE = 32;
 	
 	private double[] magnitudes;
 	private double[] frequencies;
-	private int frameSize;
 	private Note[] pitchArray;
 	private double[] maxFreq;
-	private double binSize;
 	private double expectedPhaseDifference;
 	private String fileName;
-	private static AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
-	private static AudioFormat format = new AudioFormat(22050, 16, 1, true, true);
+	private double[] rawAudioData;
+	private int numberOfSamples;
+	private float binSize = (float) SAMPLE_SIZE / (float) FRAME_SIZE;
 	
-	
-	public Storage(double[] magnitudes, double[] frequencies, int frameSize, Note[] pitchArray, double[] maxFreq, double binSize, double expectedPhaseDifference, String fileName){
-		this.magnitudes = magnitudes;
-		this.frequencies = frequencies;
-		this.frameSize = frameSize;
-		this.pitchArray = pitchArray;
-		this.maxFreq = maxFreq;
-		this.binSize = binSize;
-		this.expectedPhaseDifference = expectedPhaseDifference;
+	public AudioData(String fileName, double[] rawAudioData, int numberOfSamples){
 		this.fileName = fileName;
+		this.setRawAudioData(rawAudioData);
+		this.setNumberOfSamples(numberOfSamples);
 	}
 	
 	
@@ -60,16 +60,6 @@ public class Storage {
 	}
 
 
-	public int getFrameSize() {
-		return frameSize;
-	}
-
-
-	public void setFrameSize(int frameSize) {
-		this.frameSize = frameSize;
-	}
-
-
 	public double[] getMagnitudes() {
 		return magnitudes;
 	}
@@ -99,30 +89,24 @@ public class Storage {
 	}
 
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public double[] getRawAudioData() {
+		return rawAudioData;
 	}
 
 
-	public static AudioFileFormat.Type getFileType() {
-		return fileType;
+	public void setRawAudioData(double[] rawAudioData) {
+		this.rawAudioData = rawAudioData;
 	}
 
 
-	public static void setFileType(AudioFileFormat.Type fileType) {
-		Storage.fileType = fileType;
+	public int getNumberOfSamples() {
+		return numberOfSamples;
 	}
 
 
-	public static AudioFormat getFormat() {
-		return format;
+	public void setNumberOfSamples(int numberOfSamples) {
+		this.numberOfSamples = numberOfSamples;
 	}
 
-
-	public static void setFormat(AudioFormat format) {
-		Storage.format = format;
-	}
-	
-	
 
 }

@@ -4,11 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import pitchDetection.FileConverter;
-import pitchDetection.PitchCorrection;
-import pitchDetection.PitchDetection;
+import pitchDetection.*;
 import playback.PlaybackModule;
-import utilities.Storage;
+import utilities.AudioData;
 
 import input.*;
 
@@ -43,7 +41,6 @@ public class ControllerImpl implements Controller {
 		}
 		
 		while(recordingThread.isAlive()){}
-		getPitch(newFile);
 	}
 	
 	public void play() throws IOException{
@@ -80,22 +77,10 @@ public class ControllerImpl implements Controller {
 		
 		newFile = new File(System.getProperty("user.dir") + "/audio/" + holder + ".wav");
 		
-		PitchCorrection corrector = new PitchCorrection();
-		
-		corrector.correct(getPitch(newFile));
+		PitchCorrection corrector = new PitchCorrection(newFile);
+		corrector.correct();
 
 		holder = null;
-	}
-	
-	public Storage getPitch(File newFile){
-		
-		PitchDetection pitch = new PitchDetection();
-		FileConverter converter = new FileConverter();
-		
-		double[] convertedData = converter.getSoundData(newFile);
-		int numberOfSamples = converter.getNumberOfSamples();
-		
-		return(pitch.detect(convertedData, numberOfSamples, holder));
 	}
 }
 

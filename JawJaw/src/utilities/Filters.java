@@ -2,6 +2,10 @@ package utilities;
 
 public class Filters {
 	
+	/*
+	 * 
+	 */
+	
 	public byte[] lowPass( byte[] values , int smoothing ){
 		  byte value = values[0]; // start with the first input
 		  int length = values.length;

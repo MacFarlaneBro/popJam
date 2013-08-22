@@ -10,23 +10,25 @@ import utilities.LowPassFilter;
 import utilities.Mode;
 import utilities.Note;
 import utilities.Pitch;
-import utilities.Storage;
+import utilities.AudioData;
 import edu.emory.mathcs.jtransforms.fft.*;
 
 public class PitchDetection{
 	
-	private int sampleSize = 8192;
-	private int frameSize = 4096;
-	private int sampleRate = 44100;
-	private int oversamplingRate = 32;
+	private int sampleSize = AudioData.SAMPLE_SIZE;
+	private int frameSize = AudioData.FRAME_SIZE;
+	private int sampleRate = AudioData.SAMPLE_RATE;
+	private int oversamplingRate = AudioData.OVERSAMPLING_RATE;
+	private int numberOfSamples;
+	private double[] inputData;
 	int a = 0;
 	private float binSize = (float) sampleRate / (float) frameSize;
 	private	Pitch pitch = new Pitch();
 	private int indexHolder; //holds the index value for the maximum amplitude, allowing me to find the corresponding frequency
 	
 	
-	public Storage detect(double[] input, int numberOfSamples, String fileName){
-
+	public AudioData detect(AudioData input){
+		
 		int counter = 0;
 		int stepSize = frameSize/oversamplingRate;
 		int latency = frameSize - stepSize;
@@ -37,10 +39,14 @@ public class PitchDetection{
 		double[] maxAmp = new double[frameSize];
 		float[] fourierTarget = new float[frameSize*2];
 		double[] prevPhase = new double[sampleSize];
-		double[] frequencyArray = new double[input.length];
-		double[] magnitudeArray = new double[input.length];
+		
 		Note[] pitchArray;
 
+		numberOfSamples = input.getNumberOfSamples();
+		inputData = input.getRawAudioData();
+		
+		double[] frequencyArray = new double[inputData.length];
+		double[] magnitudeArray = new double[inputData.length];
 		
 		if(counter == 0) counter = latency;
 		int marker = 0;
@@ -48,7 +54,7 @@ public class PitchDetection{
 		{		
 				LowPassFilter filter = new LowPassFilter();
 				fourierTarget[marker] = 
-						(float) filter.twoPointMovingAverageFilter(input[counter]);
+						(float) filter.twoPointMovingAverageFilter(inputData[counter]);
 				counter++;
 				marker++;
 						//read enough data to fill the FFT
@@ -142,65 +148,10 @@ public class PitchDetection{
 				}	
 				i++;
 		}
-		
-		Storage store = new Storage(magnitudeArray, frequencyArray, frameSize/2, pitchArray, maxFreq, binSize, expectedPhaseDifference, fileName);
-		
-		return store;
-		
+				
+		return null;
+						
 	}
-		
-
-	
-	public byte[][] wavToByte(File newFile){
-		byte[] audioBytes = null;
-		
-		ByteArrayOutputStream out = null; 
-		BufferedInputStream in = null;
-		
-		try {
-			in = new BufferedInputStream(new FileInputStream(newFile));
-			out = new ByteArrayOutputStream();
-			
-			int read;
-			byte[] intermediate = new byte[1024];
-			
-			//the input file is converted into a byte array
-			while((read = in.read(intermediate)) > 0)
-			{
-				out.write(intermediate, 0, read);
-			}
-			
-			audioBytes = out.toByteArray();
-			in.close();
-			out.close();
-			
-		} catch (FileNotFoundException ex) {
-			ex.printStackTrace();
-		} catch (IOException ex){
-			ex.printStackTrace();
-		}
-		System.out.println(audioBytes.length);
-		System.out.println(sampleSize);
-		System.out.println(audioBytes.length/sampleSize);
-		
-		byte[][] returner = new byte[(audioBytes.length/sampleSize)*4][sampleSize];//the index of the matrix is multiplied by 4 to account for the 75% window overlap implemented to account for smearing and accurate phase derivation calculation
-		
-		int j = 0;
-		int i = 0;
-		
-		while(i < (audioBytes.length-sampleSize))//These two loops separate the single enormous output byte array from the wav file into a matrix of 1024 byte samples to allow for easier processing by the pitch detector
-		{
-				for(int n = 0; n < sampleSize; n++)
-				{
-						returner[j][n] = audioBytes[i];
-						i++;
-				}
-				i = i-((sampleSize/4)*3);//creates a sample window overlap of 75%
-				j++;
-		}	
-		return returner;
-	}
-
 	
 	public double mode(double[] modePitches)
 	{

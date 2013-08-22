@@ -4,7 +4,7 @@ import java.io.*;
 
 import javax.sound.sampled.*;
 
-import utilities.Storage;
+import utilities.AudioData;
 
 
 //running the recording module as a thread allows the stopping of recording with no busywaiting
@@ -29,7 +29,7 @@ public class RecordingModule implements Runnable{
 	}
 	
 	public void openLine(){
-		 info = new DataLine.Info(TargetDataLine.class, Storage.getFormat());
+		 info = new DataLine.Info(TargetDataLine.class, AudioData.FORMAT);
 	    if(!AudioSystem.isLineSupported(info)){
 	    	//checks to see if the line is inaccessible, if so, handles the error
 	    	System.out.println("I'm afraid the line is not supported, I don't know what to do in this scenario");
@@ -37,7 +37,7 @@ public class RecordingModule implements Runnable{
 		    try{
 		    	//finds the available microphone input line and opens it without beginning recording
 		    	line = (TargetDataLine) AudioSystem.getLine(info);
-		    	line.open(Storage.getFormat());
+		    	line.open(AudioData.FORMAT);
 
 		    } catch (LineUnavailableException ex){
 		    	System.out.println("I'm afraid the line is not available, I don't know what to do in this scenario");
@@ -53,7 +53,7 @@ public class RecordingModule implements Runnable{
 			AudioInputStream ais = new AudioInputStream(line);
 			
 			//the user named file is written to
-			AudioSystem.write(ais, Storage.getFileType(), newFile);
+			AudioSystem.write(ais, AudioData.FILETYPE, newFile);
 			
 			
 		} catch (IOException e) {
