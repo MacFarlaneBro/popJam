@@ -7,8 +7,8 @@ import java.io.InputStreamReader;
 public class Launcher {
 	
 	public static void main(String[] args) throws IOException{
-		
 				
+		System.out.println( ((12 * Math.log(440/220)) /Math.log(2.0)) + 57.01d);
 		String entry = "";	
 				
 		Controller theControl = new ControllerImpl();

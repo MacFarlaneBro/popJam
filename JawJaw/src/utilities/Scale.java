@@ -19,7 +19,7 @@ public class Scale {
 		
 		Pitch pitch = new Pitch();
 		
-		root = pitch.getPitch(mode.getMode(temp));// finds the most common note in the first 10 pitches and assigns it as the root
+		root = pitch.getNote(mode.getMode(temp));// finds the most common note in the first 10 pitches and assigns it as the root
 	}
 	
 	public void setScale(String scale){

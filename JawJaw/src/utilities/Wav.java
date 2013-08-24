@@ -23,32 +23,24 @@ public class Wav{
 		
 		public AudioData getSoundData(File inputFile){
 			
-			AudioFormat audioFormat;
 			int numberOfSamples;
-			byte[] songData;
-			double[] dataForDetection;
 			AudioInputStream audioInputStream;
 			AudioData storage = null;
 			
 			try{
 				audioInputStream = AudioSystem.getAudioInputStream(inputFile);
-				audioFormat = audioInputStream.getFormat();
 				numberOfSamples = (int) audioInputStream.getFrameLength();
+
 				
-				int size = (int) (audioInputStream.getFrameLength() * audioFormat.getFrameSize());
-				songData = new byte[size];
+				int frameLength = (int) audioInputStream.getFrameLength();
+				int byteCount = frameLength * AudioData.FORMAT.getFrameSize();
+				int sampleCount = byteCount/2;
+				byte[] dataForDetection = new byte[byteCount];
 				
-				DataInputStream dataInputStream = new DataInputStream(audioInputStream);
+				audioInputStream.read(dataForDetection, 0, byteCount);
 				
-				dataInputStream.readFully(songData);	//The data from the audiofile is moved into the songData byteArray		
-				
-				ArrayConversion toShort = new ArrayConversion(songData, false);
-				ArrayConversion toDouble = new ArrayConversion(toShort.getShortArray());
-				
-				dataForDetection = toDouble.getDoubleArray();
-				
-				storage = new AudioData(inputFile.getName(), dataForDetection, numberOfSamples);
-				
+				storage = new AudioData(inputFile.getName(), dataForDetection, numberOfSamples, sampleCount);
+								
 			} catch (Exception ex){
 				ex.printStackTrace();
 			}

@@ -16,16 +16,29 @@ import edu.emory.mathcs.jtransforms.fft.*;
 public class PitchDetection{
 	
 	private int sampleSize = AudioData.SAMPLE_SIZE;
-	private int frameSize = AudioData.FRAME_SIZE;
+	private int frameSize = AudioData.WINDOW_SIZE;
 	private int sampleRate = AudioData.SAMPLE_RATE;
 	private int oversamplingRate = AudioData.OVERSAMPLING_RATE;
-	private int numberOfSamples;
-	private double[] inputData;
-	int a = 0;
+	private int stepSize = AudioData.STEP_SIZE;
+	
+	private double[] inputData = new double[sampleSize];
+	private float[] fourierTarget = new float[frameSize*2];
+
+	double[] window;
+	double[] frequencyArray;
+	double[] magnitudeArray;
+	
+	double[] trueFreqArray = new double[sampleSize];	
+	double[] maxFreq = new double[frameSize];
+	double[] maxAmp = new double[frameSize];
+	double[] prevPhase = new double[sampleSize];	
+	
 	private float binSize = (float) sampleRate / (float) frameSize;
 	private	Pitch pitch = new Pitch();
 	private int indexHolder; //holds the index value for the maximum amplitude, allowing me to find the corresponding frequency
-	
+	private int numberOfSamples;
+	private int a = 0;
+	private AudioData output;
 	
 	public AudioData detect(AudioData input){
 		
@@ -33,33 +46,34 @@ public class PitchDetection{
 		int stepSize = frameSize/oversamplingRate;
 		int latency = frameSize - stepSize;
 		double expectedPhaseDifference = 2*Math.PI* (double) stepSize/ (float) frameSize;//The average difference between phase values
-		double[] window;
-		double[] sampleArray = new double[sampleSize];	
-		double[] maxFreq = new double[frameSize];
-		double[] maxAmp = new double[frameSize];
-		float[] fourierTarget = new float[frameSize*2];
-		double[] prevPhase = new double[sampleSize];
+		this.output = input;
 		
 		Note[] pitchArray;
 
-		numberOfSamples = input.getNumberOfSamples();
-		inputData = input.getRawAudioData();
-		
-		double[] frequencyArray = new double[inputData.length];
-		double[] magnitudeArray = new double[inputData.length];
+		numberOfSamples = input.getNumberOfSamples();//numSampsToProcess
+				
+		frequencyArray = new double[inputData.length];
+		magnitudeArray = new double[inputData.length];
 		
 		if(counter == 0) counter = latency;
+		System.out.println("Latency: " + latency);
+		System.out.println("Frame Size: " + frameSize);
+		System.out.println("Step Size: " + stepSize);
 		int marker = 0;
-		for(int k = 0; k < numberOfSamples; k++)
+		
+		for(int k = 0; k < numberOfSamples; k++)//loop to cover all the samples
 		{		
 				LowPassFilter filter = new LowPassFilter();
-				fourierTarget[marker] = 
-						(float) filter.twoPointMovingAverageFilter(inputData[counter]);
+				fourierTarget[marker] = (float) filter.twoPointMovingAverageFilter(inputData[counter]);
+				fourierTarget[marker] = (float) inputData[counter];
+				
 				counter++;
 				marker++;
-						//read enough data to fill the FFT
-						if(marker>=frameSize)
-						{
+										
+						if(marker>=frameSize)//read enough data to fill the FFT
+						{		
+							System.out.println("post reaching frame size " + counter);
+								marker = 0;
 								counter -= latency;
 								window = new double[frameSize];
 								
@@ -111,7 +125,7 @@ public class PitchDetection{
 										//computer the true frequency of the current partial
 										double trueFreq = (double) i*binSize + (holder * binSize);
 										
-										if(trueFreq!= 0) sampleArray[a] = trueFreq;
+										if(trueFreq!= 0) trueFreqArray[a] = trueFreq;
 										
 										//store the magnitude and frequency
 										magnitudeArray[i] = (float) magnitude;
@@ -121,33 +135,32 @@ public class PitchDetection{
 								maxAmp[a] = maxArray(magnitudeArray);//saving the maximum values from each FFT frame
 								maxFreq[a] = frequencyArray[indexHolder];//saving the corresponding frequency
 								a++;
-								marker = 0;
 						}
+						
 		}
 		
 		pitchArray = new Note[a];
 		
 		for(int i = 0; maxFreq[i] != 0; i++)
 		{
-//				System.out.println("Max Magnitude: " + maxAmp[i]);
-//				System.out.println("True Frequency: " + maxFreq[i]);
-//				if(pitch.getPitch(maxFreq[i])!= null){
-//				System.out.println("Pitch: " + pitch.getPitch(maxFreq[i]).getPitch());
-//				}
-				pitchArray[i] = pitch.getPitch(maxFreq[i]);
+			System.out.println(maxFreq[i]);
+				pitchArray[i] = pitch.getNote(maxFreq[i]);
 		}
 		
 		System.out.println("Pitches Present: ");
 		System.out.println(pitchArray.length);
 		int i = 0;
+		
 		while(i!= a)
 		{	
-				if(pitch.getPitch(maxFreq[i])!= null)
+				if(pitch.getNote(maxFreq[i])!= null)
 				{
 						System.out.print(pitchArray[i].getPitch() + ", ");
 				}	
 				i++;
 		}
+
+		output.setPitchArray(pitchArray);
 				
 		return null;
 						
