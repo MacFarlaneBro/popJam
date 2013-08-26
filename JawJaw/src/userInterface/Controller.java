@@ -9,4 +9,6 @@ public interface Controller {
 	public void play() throws IOException;
 	
 	public void correct() throws IOException;
+	
+	public void playNote() throws IOException;
 }

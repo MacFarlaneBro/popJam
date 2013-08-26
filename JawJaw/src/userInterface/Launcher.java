@@ -15,7 +15,7 @@ public class Launcher {
 		
 		while(!entry.equals("exit")){
 		entry = "";	
-		System.out.println("Would you like to record new audio (r), play back a track? (p), or correct a track (c)(type exit to exit)");
+		System.out.println("Would you like to record new audio (r), play back a track? (p), correct a track (c) or get a reference tone (t) (type exit to exit)");
 		
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		entry = bufferedReader.readLine();
@@ -31,6 +31,10 @@ public class Launcher {
 		else if(entry.equals("c"))
 		{	
 				theControl.correct();		
+		}
+		else if(entry.equals("t"))
+		{
+				theControl.playNote();
 		}
 		System.out.println("Done");
 		}

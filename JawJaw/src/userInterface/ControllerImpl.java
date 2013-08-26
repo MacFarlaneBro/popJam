@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import pitchDetection.*;
 import playback.PlaybackModule;
+import synthModule.SynthTester;
 import utilities.AudioData;
 
 import input.*;
@@ -79,6 +80,20 @@ public class ControllerImpl implements Controller {
 		
 		PitchCorrection corrector = new PitchCorrection(newFile);
 		corrector.correct();
+
+		holder = null;
+	}
+	
+	public void playNote() throws IOException{
+System.out.println("Which note would you like to play? ");
+		
+		bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+		String userEnteredName = bufferedReader.readLine();
+		holder = userEnteredName;
+				
+		SynthTester synth = new SynthTester();
+		
+		synth.playPitch(holder);
 
 		holder = null;
 	}
