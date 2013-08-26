@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import pitchDetection.*;
 import playback.PlaybackModule;
-import synthModule.SynthTester;
 import utilities.AudioData;
 
+import generator.SynthModule;
 import input.*;
 
 public class ControllerImpl implements Controller {
@@ -91,11 +91,15 @@ System.out.println("Which note would you like to play? ");
 		String userEnteredName = bufferedReader.readLine();
 		holder = userEnteredName;
 				
-		SynthTester synth = new SynthTester();
+		SynthModule synth = new SynthModule();
 		
 		synth.playPitch(holder);
 
 		holder = null;
+	}
+	
+	public void generate() throws IOException{
+		
 	}
 }
 

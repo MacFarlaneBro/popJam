@@ -1,4 +1,4 @@
-package synthModule;
+package generator;
 
 import java.io.*;
 
@@ -8,19 +8,19 @@ import utilities.Pitch;
 import com.jsyn.*;
 import com.jsyn.unitgen.*;
 
-public class SynthTester {
+public class SynthModule {
 	
 	private Synthesizer synth;
 	private UnitOscillator osc;
 	private LinearRamp lag;
 	private LineOut lineOut;
 	
-	public SynthTester()
+	public SynthModule()
 	{
 		synth = JSyn.createSynthesizer();
 		
 		// Add a tone generator.
-		synth.add( osc = new TriangleOscillator() );
+		synth.add( osc = new SineOscillator());
 		// Add a lag to smooth out amplitude changes and avoid pops.
 		synth.add( lag = new LinearRamp() );
 		// Add an output mixer.
@@ -53,11 +53,12 @@ public class SynthTester {
 				startStop = in.readLine();
 				
 				if(!startStop.equals("exit")){
+					
 					synth.start();
 					lineOut.start();
-				} else {
-					break;
-				}
+					
+				} else 	break;
+
 				
 				startStop = in.readLine();
 				
