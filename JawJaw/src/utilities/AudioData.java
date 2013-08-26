@@ -38,6 +38,7 @@ public class AudioData {
 	private int[] modSamples;
 	private double[] correctedPitch;
 	private double[] averagePitches;
+	private double[] noteTimes;
 	
 	
 	public AudioData(String fileName, byte[] dataForDetection, int numberOfSamples, int sampleCount){
@@ -170,6 +171,12 @@ public class AudioData {
 
 	public void setAveragePitches(double[] averagePitch) {
 		this.averagePitches = averagePitch;
+		
+	}
+
+
+	public void setNoteTimes(double[] noteTimer) {
+		this.noteTimes = noteTimer;
 		
 	}
 

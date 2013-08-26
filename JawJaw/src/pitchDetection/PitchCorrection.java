@@ -14,6 +14,7 @@ public class PitchCorrection {
 	private ArrayList<WaveSegment> segs;
 	private Note[] pitches;
 	private double[] correctedPitch;
+	private double[] noteTimer;
 
 	public PitchCorrection(File theFile){
 		this.theFile = theFile;
@@ -30,23 +31,33 @@ public class PitchCorrection {
 		System.out.println("number of pitches: " + pitches.length);
 		Mode mode = new Mode();
 		int j = 0;
-		double[] averagePitch = new double[100];
+		double[] averagePitch = new double[30];
+		
+		int timeRecorder = 0;
+		int a = 0; // a is the index incrementer for the noteTimer array
+		noteTimer = new double[averagePitch.length];
 		
 		System.out.print("Average Pitch List: ");
 		for(int i = 0; i < pitches.length; i++){
 			if(pitches[i] != null){
 				//System.out.println("Index no: " + i);
+				if(j == 0){
+					timeRecorder = i;
+				}
 				averagePitch[j] = (double) pitches[i].getFrequency();
 				j++;
 			}
 			if(j == averagePitch.length-1){
 				Pitch pitch = new Pitch();
 				System.out.print(pitch.getNote((mode.getMode(averagePitch))).getPitch() + ", ");
+				noteTimer[a] =  ((float) i) - timeRecorder;
+				System.out.println(noteTimer[a]/AudioData.SAMPLE_RATE);
 				j = 0;
 			}
 			
 		}
 		postDetect.setAveragePitches(averagePitch);
+		postDetect.setNoteTimes(noteTimer);
 //		modifiedSamples = postDetect.getModSamples();
 //		correctedPitch = new double[pitches.length];
 //		getCorrectPitch();

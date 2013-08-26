@@ -11,4 +11,6 @@ public interface Controller {
 	public void correct() throws IOException;
 	
 	public void playNote() throws IOException;
+	
+	public void generate() throws IOException;
 }

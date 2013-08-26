@@ -178,7 +178,7 @@ public class Analysis {
 				pitches[i] = null;
 			}
 			if(pitches[i] != null){
-				System.out.println(pitches[i].getPitch());
+				//System.out.println(pitches[i].getPitch());
 				j++;
 			}
 		}
@@ -203,7 +203,6 @@ public class Analysis {
 		
 		for(int i = (index+20); i < end; i++){//find out why you add 20
 			double difference = 0;
-			System.out.println(i);
 			for(int j = 0; j < windowWidth; j++){
 				if(index+j < 0){
 					break;
