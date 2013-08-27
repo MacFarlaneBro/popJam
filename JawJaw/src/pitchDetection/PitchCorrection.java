@@ -25,7 +25,7 @@ public class PitchCorrection {
 	public void correct() {
 		
 		//raw data from the sound file is analysed to produce pitch data
-		Analysis analyser = new Analysis(preDetect);
+		AnalysisImpl analyser = new AnalysisImpl(preDetect);
 		postDetect = analyser.getData();
 		pitches = postDetect.getPitchArray();
 		System.out.println("number of pitches: " + pitches.length);

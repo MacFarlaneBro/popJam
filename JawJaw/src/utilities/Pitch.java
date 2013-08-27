@@ -151,69 +151,69 @@ public class Pitch {
 			return note = new Note("D#5");// 622.25
 		}
 		else if(maxFreq >= 640.75 && maxFreq < 678.86)
-//		{
-//			return note = new Note("E5");// 659.26
-//		}
-//		else if(maxFreq >= 678.86 && maxFreq < 719.22)
-//		{
-//			return note = new Note("F5");// 698.46
-//		}
-//		else if(maxFreq >= 719.22 && maxFreq < 761.99)
-//		{
-//			return note = new Note("F#5");// 739.99
-//		}
-//		else if(maxFreq >= 761.99 && maxFreq < 807.3)
-//		{
-//			return note = new Note("G5");// 783.99
-//		}
-//		else if(maxFreq >= 807.3 && maxFreq < 855.15)
-//		{
-//			return note = new Note("G#5");// 830.61
-//		}
-//		else if(maxFreq >= 855.15 && maxFreq < 906.16)
-//		{
-//			return note = new Note("A5");// 880.00
-//		}
-//		else if(maxFreq >= 906.16 && maxFreq < 960.05)
-//		{
-//			return note = new Note("A#5");// 932.33
-//		}
-//		else if(maxFreq >= 960.05 && maxFreq < 1017.13)
-//		{
-//			return note = new Note("B5");// 987.77
-//		}
-//		else if(maxFreq >= 1017.13 && maxFreq < 1077.61)
-//		{
-//			return note = new Note("C6");// 1046.50
-//		}
-//		else if(maxFreq >= 1077.61 && maxFreq < 1141.69)
-//		{
-//			return note = new Note("C#6");// 1108.73
-//		}
-//		else if(maxFreq >= 1141.69 && maxFreq < 1209.58)
-//		{
-//			return note = new Note("D6");// 1174.66
-//		}
-//		else if(maxFreq >= 1209.58 && maxFreq < 1281.51)
-//		{
-//			return note = new Note("D#6");// 1244.51
-//		}
-//		else if(maxFreq >= 1281.51 && maxFreq < 1357.71)
-//		{
-//			return note = new Note("E6");// 1318.51
-//		}
-//		else if(maxFreq >= 1357.71 && maxFreq < 1438.45)
-//		{
-//			return note = new Note("F6");// 1396.91
-//		}
-//		else if(maxFreq >= 1438.45 && maxFreq < 1523.98)
-//		{
-//			return note = new Note("F#6");// 1479.98
-//		}
-//		else if(maxFreq >= 1523.98 && maxFreq < 1614.6)
-//		{
-//			return note = new Note("G6");// 1567.98
-//		}
+		{
+			return note = new Note("E5");// 659.26
+		}
+		else if(maxFreq >= 678.86 && maxFreq < 719.22)
+		{
+			return note = new Note("F5");// 698.46
+		}
+		else if(maxFreq >= 719.22 && maxFreq < 761.99)
+		{
+			return note = new Note("F#5");// 739.99
+		}
+		else if(maxFreq >= 761.99 && maxFreq < 807.3)
+		{
+			return note = new Note("G5");// 783.99
+		}
+		else if(maxFreq >= 807.3 && maxFreq < 855.15)
+		{
+			return note = new Note("G#5");// 830.61
+		}
+		else if(maxFreq >= 855.15 && maxFreq < 906.16)
+		{
+			return note = new Note("A5");// 880.00
+		}
+		else if(maxFreq >= 906.16 && maxFreq < 960.05)
+		{
+			return note = new Note("A#5");// 932.33
+		}
+		else if(maxFreq >= 960.05 && maxFreq < 1017.13)
+		{
+			return note = new Note("B5");// 987.77
+		}
+		else if(maxFreq >= 1017.13 && maxFreq < 1077.61)
+		{
+			return note = new Note("C6");// 1046.50
+		}
+		else if(maxFreq >= 1077.61 && maxFreq < 1141.69)
+		{
+			return note = new Note("C#6");// 1108.73
+		}
+		else if(maxFreq >= 1141.69 && maxFreq < 1209.58)
+		{
+			return note = new Note("D6");// 1174.66
+		}
+		else if(maxFreq >= 1209.58 && maxFreq < 1281.51)
+		{
+			return note = new Note("D#6");// 1244.51
+		}
+		else if(maxFreq >= 1281.51 && maxFreq < 1357.71)
+		{
+			return note = new Note("E6");// 1318.51
+		}
+		else if(maxFreq >= 1357.71 && maxFreq < 1438.45)
+		{
+			return note = new Note("F6");// 1396.91
+		}
+		else if(maxFreq >= 1438.45 && maxFreq < 1523.98)
+		{
+			return note = new Note("F#6");// 1479.98
+		}
+		else if(maxFreq >= 1523.98 && maxFreq < 1614.6)
+		{
+			return note = new Note("G6");// 1567.98
+		}
 		 if(maxFreq >= 1614.6) return null;//G6 is, according to the Guinness Book of Records, the highest note ever scored for human voice
 		
 		//else if(pitch <= 80) return "Note Below Range!";

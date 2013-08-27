@@ -2,12 +2,13 @@ package userInterface;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import pitchDetection.*;
 import playback.PlaybackModule;
 import utilities.AudioData;
-
 import generator.Generator;
 import generator.SynthModule;
 import input.*;
@@ -16,11 +17,12 @@ public class ControllerImpl implements Controller {
 	
 	BufferedReader bufferedReader;
 	String holder;
-	String entry = "";
 	File newFile;
 	
 	
 	public void record() throws IOException{
+		
+		String entry = "";
 				
 		System.out.println("You're ready to start recording! Enter the name of your track to begin: ");
 		
@@ -46,7 +48,9 @@ public class ControllerImpl implements Controller {
 	}
 	
 	public void play() throws IOException{
-				
+		
+		String entry = "";
+
 		while(!entry.equals("exit")){
 			System.out.println("Please enter the name of the audio you would like to play (type exit to exit)");
 			
@@ -64,7 +68,6 @@ public class ControllerImpl implements Controller {
 					 ex.printStackTrace();
 				 }
 			 }
-
 		}
 	}
 
@@ -86,33 +89,39 @@ public class ControllerImpl implements Controller {
 	}
 	
 	public void playNote() throws IOException{
-		
-		System.out.println("Which note would you like to play? ");
-		
-		bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		String userEnteredName = bufferedReader.readLine();
-		holder = userEnteredName;
-				
+	
 		SynthModule synth = new SynthModule();
 		
-		synth.playPitch(holder);
+		synth.playPitch();
 
-		holder = null;
 	}
 	
-	public void generate() throws IOException{
+	public void generate(){
 		
 		System.out.println("Which track would you like to generate accompaniment for? ");
 		
+		try{
+			
 		bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		String userEnteredName = bufferedReader.readLine();
 		holder = userEnteredName;
 		
 		newFile = new File(System.getProperty("user.dir") + "/audio/" + holder + ".wav");
 		
+		if(newFile.exists()){
+
 		Generator generator = new Generator(newFile);
 		generator.getOutputData();
 		generator.getOutput();
+		} else {
+			System.out.println("I'm afraid the selected file could not be located.");
+		}
+		
+		} catch (FileNotFoundException ex){
+			System.out.println("I'm afraid the selected file could not be located.");
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 
 		holder = null;
 	}

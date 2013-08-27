@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
 import utilities.LowPassFilter;
 import utilities.Mode;
 import utilities.Note;
@@ -40,7 +41,7 @@ public class PitchDetection{
 	private int a = 0;
 	private AudioData output;
 	
-	public AudioData detect(AudioData input){
+	public Analysis detect(AudioData input){
 		
 		int counter = 0;
 		int stepSize = frameSize/oversamplingRate;
@@ -50,7 +51,7 @@ public class PitchDetection{
 		
 		Note[] pitchArray;
 
-		numberOfSamples = input.getNumberOfSamples();//numSampsToProcess
+		numberOfSamples = input.getSampleCount();//numSampsToProcess
 				
 		frequencyArray = new double[inputData.length];
 		magnitudeArray = new double[inputData.length];

@@ -36,21 +36,23 @@ public class SynthModule {
 		lag.time.set(  0.2 );
 	}
 	
-	public void playPitch(String note){
+	public void playPitch(){
 		
 		String startStop = "";
 		
-		Pitch pitch = new Pitch();
-		
-		osc.frequency.set(pitch.getFrequency(note));
-		
 		while(!startStop.equals("exit")){
+			
 			System.out.println("When you would like to hear the test pitch please enter any character, then enter any other character to stop, enter exit to exit");
 			
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		
 			try {
+		
+				Pitch pitch = new Pitch();
+		
 				startStop = in.readLine();
+				
+				osc.frequency.set(pitch.getFrequency(startStop));
 				
 				if(!startStop.equals("exit")){
 					

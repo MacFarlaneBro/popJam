@@ -3,7 +3,7 @@ package generator;
 
 import java.io.File;
 
-import pitchDetection.Analysis;
+import pitchDetection.AnalysisImpl;
 
 import utilities.AudioData;
 import utilities.Mode;
@@ -21,7 +21,7 @@ public class Generator {
 	private double[] noteTimer;
 	private SynthModule synth;
 	private double[] averagePitch = new double[20];//the size of this array determines the time over which average is calculated is collected
-	private int arraySize = 100;
+	private int arraySize;
 	private Note[] finalGenerationNotes;
 	private Note[] averageNotes;
 
@@ -34,9 +34,10 @@ public class Generator {
 	public void getOutputData(){
 		
 		//raw data from the sound file is analysed to produce pitch data
-		Analysis analyser = new Analysis(preDetect);
+		AnalysisImpl analyser = new AnalysisImpl(preDetect);
 		postDetect = analyser.getData();
 		pitches = postDetect.getPitchArray();
+		arraySize = pitches.length/1000;
 		System.out.println("number of pitches: " + pitches.length);
 		Mode mode = new Mode();
 		int j = 0;
@@ -74,7 +75,7 @@ public class Generator {
 	public void getOutput(){
 		System.out.println("Rate of non null results: " + pitches.length/averagePitch.length);
 		System.out.println("Pitch per Second: " + AudioData.SAMPLE_RATE/(pitches.length/averagePitch.length));
-		System.out.println("Audio Length: " + ((float) postDetect.getNumberOfSamples())/ ((float) AudioData.SAMPLE_RATE) + " seconds");
+		System.out.println("Audio Length: " + ((float) postDetect.getSampleCount())/ ((float) AudioData.SAMPLE_RATE) + " seconds");
 		
 		double timeRecorder = 0;
 		double changeNoteTime = 0;
@@ -129,8 +130,8 @@ public class Generator {
 			}	
 			timeTracker += noteTimer[i];
 			
-			System.out.println("Time Elapsed: " + timeTracker);
-			System.out.println("");
+//			System.out.println("Time Elapsed: " + timeTracker);
+//			System.out.println("");
 		}
 		System.out.println("adding new final Note: " + currentNote);
 		finalNote = currentNote;

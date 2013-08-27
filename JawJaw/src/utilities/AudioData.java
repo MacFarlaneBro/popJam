@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 
+import pitchDetection.Analysis;
 import pitchDetection.WaveSegment;
 
-public class AudioData {
+public class AudioData{
 	
 	public static final AudioFileFormat.Type FILETYPE = AudioFileFormat.Type.WAVE;
-	public static final AudioFormat FORMAT = new AudioFormat(22050, 16, 1, true, true);
+	public static final AudioFormat FORMAT = new AudioFormat(22050, 24, 1, true, true);
 	public static final int SAMPLE_SIZE = 16000;
 	public static final int WINDOW_SIZE = 1024; //The amount of data samples each FFT will use
 	public static final int SAMPLE_RATE = 22050;
@@ -27,7 +28,6 @@ public class AudioData {
 	private byte[] rawAudioData;
 	
 	private float binSize = (float) SAMPLE_SIZE / (float) WINDOW_SIZE;
-	private int numberOfSamples;
 	private float expectedPhaseDifference;
 	private String fileName;
 	private int sampleCount;
@@ -41,10 +41,9 @@ public class AudioData {
 	private double[] noteTimes;
 	
 	
-	public AudioData(String fileName, byte[] dataForDetection, int numberOfSamples, int sampleCount){
+	public AudioData(String fileName, byte[] dataForDetection, int sampleCount){
 		this.fileName = fileName;
 		this.rawAudioData = dataForDetection;
-		this.numberOfSamples = numberOfSamples;
 		this.sampleCount = sampleCount;
 		waveWidth =  new int[dataForDetection.length];
 	}
@@ -107,12 +106,7 @@ public class AudioData {
 	public byte[] getRawAudioData() {
 		return rawAudioData;
 	}
-
-	public int getNumberOfSamples() {
-		return numberOfSamples;
-	}
-
-
+	
 	public int getSampleCount() {
 		return sampleCount;
 	}
