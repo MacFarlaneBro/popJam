@@ -1,0 +1,7 @@
+TO DO LIST:
+
+1) find out how to make JSyn produce chords - Implement some kind of timing and metronome functionality, Done
+2) Make JSyn tailor its note output to the scale structures and generate chords, Done
+3) Re-examine the pitch correction algorithm of Tuna-Fish
+4) See if you can get input from the most commonly sung notes and determine the scale from that input, Done
+

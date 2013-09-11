@@ -1,14 +1,15 @@
-package utilities;
+package storage;
 
 public class Pitch {
-	
-	private Note note;
+	 
 	
 	public Note getNote(double maxFreq){
 		
-		if(maxFreq >= 80.095 && maxFreq < 84.86)
+		Note note;
+		
+		if(maxFreq >= 80.095 && maxFreq < 84.86)// these boundaries represent the midpoints between the current note and its adjacent notes
 		{
-			return note = new Note("E2");// 82.41
+			return note = new Note("E2");// 82.41 The number in the comments represent the actual note values
 		}
 		else if(maxFreq >= 84.86 && maxFreq < 89.90)
 		{
@@ -214,15 +215,23 @@ public class Pitch {
 		{
 			return note = new Note("G6");// 1567.98
 		}
-		 if(maxFreq >= 1614.6) return null;//G6 is, according to the Guinness Book of Records, the highest note ever scored for human voice
+		 if(maxFreq >= 1614.6) return null;//G6 is, according to the Guinness Book of Records, the highest note ever scored for human voice (in Mozarts Popoli Di Tessaglia)
 		
-		//else if(pitch <= 80) return "Note Below Range!";
 		return null;
 	}
 	
 	public double getFrequency(String pitch){
 		
         switch (pitch) {
+        	
+        	case "C2": return 65.41;
+        	
+        	case "C#2": return 69.30;
+        	
+        	case "D2": return 73.42;
+        	
+        	case "D#2": return 77.78;
+        	
             case "E2": return 82.41;
             
             case "F2": return 87.31;
@@ -259,7 +268,7 @@ public class Pitch {
             
             case "A3": return 220.00;
             
-            case "A#3": return 223.08;
+            case "A#3": return 233.08;
             
             case "B3": return 246.94;
             
@@ -327,7 +336,7 @@ public class Pitch {
             
             case "G6": return 1567.98;
                         
-            default : System.out.println("pitch not recognised!");
+            default : System.out.println("pitch not recognised:" + pitch);
             		return 1.00;
         }
 	}

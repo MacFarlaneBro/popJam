@@ -6,16 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import pitchDetection.*;
-import playback.PlaybackModule;
-import utilities.AudioData;
-import generator.Generator;
-import generator.SynthModule;
-import input.*;
+
+import analysis.*;
+import storage.AudioData;
+import synth.AccompanimentGenerator;
+import inputOutput.*;
 
 public class ControllerImpl implements Controller {
 	
-	BufferedReader bufferedReader;
+	
 	String holder;
 	File newFile;
 	
@@ -26,24 +25,37 @@ public class ControllerImpl implements Controller {
 				
 		System.out.println("You're ready to start recording! Enter the name of your track to begin: ");
 		
-		bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		String userEnteredName = bufferedReader.readLine();
-		holder = userEnteredName;
-		System.out.println("You're recording has begun, enter any character to finish");
+		//getting the file name from the user
+		String userEnteredName = getUserInput();
+		newFile = new File(AudioData.AUDIO_FOLDER + userEnteredName + ".wav");
 		
-		newFile = new File(System.getProperty("user.dir") + "/audio/" + holder + ".wav");
+		//getting the tempo the metronome should play at from the user
+		System.out.println("What tempo would you like to record at?");
+		int tempoNum = Integer.parseInt(getUserInput());
 		
-		Runnable theRecorder = new RecordingModule(newFile);
+		System.out.println("Finally, would you like a reference note to help tune? (Y/N)");
+		holder = getUserInput();
+		if(holder.equals("y")||holder.equals("Y"))
+		{	
+			System.out.println("Which note would you like to use as a reference?");
+			holder = getUserInput();
+			AccompanimentGenerator gen = new AccompanimentGenerator();
+			gen.playPitch(holder);
+		}
+
+		//starting up the thread to record user input with the given metronome and key
+		Runnable theRecorder = new RecordingModule(newFile, tempoNum);
 		Thread recordingThread = new Thread(theRecorder);
 		recordingThread.start();
 		
-		entry = bufferedReader.readLine();
-		
+		//stops recording on user input
+		entry = getUserInput();
 		if(entry!= null){
 				RecordingModule stopper = (RecordingModule) theRecorder;
 				stopper.getLine().close();
 		}
 		
+		//prevents the program from progressing while the user is still recording
 		while(recordingThread.isAlive()){}
 	}
 	
@@ -54,9 +66,7 @@ public class ControllerImpl implements Controller {
 		while(!entry.equals("exit")){
 			System.out.println("Please enter the name of the audio you would like to play (type exit to exit)");
 			
-			 bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-			 entry = bufferedReader.readLine();
-			 
+			 entry = getUserInput();
 			 if(entry.equals("exit")){
 				 break;
 			 } else {
@@ -71,59 +81,48 @@ public class ControllerImpl implements Controller {
 		}
 	}
 
-	@Override
-	public void correct() throws IOException {
-		
-		System.out.println("Which track would you like to correct? ");
-		
-		bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		String userEnteredName = bufferedReader.readLine();
-		holder = userEnteredName;
-		
-		newFile = new File(System.getProperty("user.dir") + "/audio/" + holder + ".wav");
-		
-		PitchCorrection corrector = new PitchCorrection(newFile);
-		corrector.correct();
-
-		holder = null;
-	}
-	
-	public void playNote() throws IOException{
-	
-		SynthModule synth = new SynthModule();
-		
-		synth.playPitch();
-
-	}
 	
 	public void generate(){
 		
 		System.out.println("Which track would you like to generate accompaniment for? ");
 		
-		try{
-			
-		bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		String userEnteredName = bufferedReader.readLine();
-		holder = userEnteredName;
-		
-		newFile = new File(System.getProperty("user.dir") + "/audio/" + holder + ".wav");
-		
-		if(newFile.exists()){
+		newFile = new File(System.getProperty("user.dir") + "/audio/" + getUserInput() + ".wav");
 
-		Generator generator = new Generator(newFile);
-		generator.getOutputData();
-		generator.getOutput();
-		} else {
-			System.out.println("I'm afraid the selected file could not be located.");
-		}
+		InputRefinement generator = new InputRefinement(newFile);
+
+	}
+
+	@Override
+	public void melodyMaker() {
 		
-		} catch (FileNotFoundException ex){
-			System.out.println("I'm afraid the selected file could not be located.");
+		AccompanimentGenerator synth = new AccompanimentGenerator();
+		System.out.println("What speed would you like the metronome to be (bpm)? ");
+
+		int bpm = Integer.parseInt(getUserInput());
+		
+		System.out.println("and what root note would you like to use? ");
+		
+		String root = getUserInput();
+		
+		System.out.println("finally what key type would you like the music to have? (minor, major or pentatonic) ");
+		
+		String scaleType = getUserInput();
+		
+		synth.melodyGenerator(root, bpm, scaleType);
+	}
+	
+	public String getUserInput(){
+		
+		String returnString = null;
+		
+		try {
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+			returnString = bufferedReader.readLine();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-
-		holder = null;
+		
+		return returnString;
 	}
 }
 

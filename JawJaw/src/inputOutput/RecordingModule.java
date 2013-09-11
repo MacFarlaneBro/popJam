@@ -1,10 +1,11 @@
-package input;
+package inputOutput;
+
 
 import java.io.*;
 
 import javax.sound.sampled.*;
 
-import utilities.AudioData;
+import storage.AudioData;
 
 
 //running the recording module as a thread allows the stopping of recording with no busywaiting
@@ -13,10 +14,12 @@ public class RecordingModule implements Runnable{
 	private TargetDataLine line = null;
 	private File newFile;
 	private DataLine.Info info;
+	private double tempo;
 		
 	//assigning the user named and generated file to be recorded to
-	public RecordingModule(File newFile){	
+	public RecordingModule(File newFile, int tempo){	
 		this.newFile = newFile;
+		this.tempo = (double) tempo;
 	}
 	
 	public File start(){
@@ -27,6 +30,7 @@ public class RecordingModule implements Runnable{
 	public Line getLine(){
 		return line;
 	}
+	
 	
 	public void openLine(){
 		 info = new DataLine.Info(TargetDataLine.class, AudioData.FORMAT);
@@ -48,6 +52,13 @@ public class RecordingModule implements Runnable{
 	public File readLine(){
 		
 		try{
+
+			Runnable metronome = new Metronome(tempo);
+			Thread metronomeThread = new Thread(metronome);
+			metronomeThread.start();
+			
+			System.out.println("You're recording has begun, enter any character to finish");
+			
 			line.start();		
 			System.out.println("Start recording");
 			AudioInputStream ais = new AudioInputStream(line);
@@ -55,7 +66,7 @@ public class RecordingModule implements Runnable{
 			//the user named file is written to
 			AudioSystem.write(ais, AudioData.FILETYPE, newFile);
 			
-			
+			metronomeThread.interrupt();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,4 +1,4 @@
-package utilities;
+package analysis;
 
 public class Mode {
 	

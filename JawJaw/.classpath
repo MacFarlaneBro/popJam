@@ -5,6 +5,5 @@
 	<classpathentry kind="lib" path="/Users/charliebrodie/Downloads/Project/Libraries/jsyn-beta-16.5.14.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Users/charliebrodie/Downloads/jmf-2_1_1e-alljava.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

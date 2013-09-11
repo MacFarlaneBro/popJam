@@ -1,10 +1,10 @@
-package utilities;
+package storage;
 
 public class Note {
 	
-	String pitch;
-	double frequency;
-	double time;
+	private String pitch;
+	private double frequency;
+	private double time;
 	
 	public Note(String pitch){
 		

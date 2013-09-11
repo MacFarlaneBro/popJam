@@ -1,4 +1,4 @@
-package playback;
+package inputOutput;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +25,7 @@ public class PlaybackModule implements Runnable {
 	                    AudioInputStream stream = AudioSystem.getAudioInputStream(file.toURI().toURL());
 	                    theClip.open(stream);
 	                    
+	                    
                 }
                 else {
                     System.out.println("I'm sorry, I was unable to find the following file " + fileName);
@@ -43,7 +44,6 @@ public class PlaybackModule implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
-
            
     }
     
