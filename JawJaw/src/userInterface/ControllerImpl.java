@@ -88,7 +88,7 @@ public class ControllerImpl implements Controller {
 		
 		newFile = new File(System.getProperty("user.dir") + "/audio/" + getUserInput() + ".wav");
 
-		InputRefinement generator = new InputRefinement(newFile);
+		PostProcessing generator = new PostProcessing(newFile);
 
 	}
 
@@ -104,7 +104,7 @@ public class ControllerImpl implements Controller {
 		
 		String root = getUserInput();
 		
-		System.out.println("finally what key type would you like the music to have? (minor, major or pentatonic) ");
+		System.out.println("finally what key type would you like the music to have? (minor, major or minor pentatonic (pentatonic)) ");
 		
 		String scaleType = getUserInput();
 		

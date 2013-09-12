@@ -65,8 +65,8 @@ public class RecordingModule implements Runnable{
 			
 			//the user named file is written to
 			AudioSystem.write(ais, AudioData.FILETYPE, newFile);
-			
 			metronomeThread.interrupt();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

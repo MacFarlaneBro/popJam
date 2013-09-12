@@ -1,11 +1,10 @@
 package analysis;
 
-
 import storage.AudioData;
 import storage.Note;
 import storage.Pitch;
 
-public class Analysis {
+public class SampleAnalysis {
 
 	private AudioData audioData;
 	private byte[] byteAudioData;
@@ -16,7 +15,7 @@ public class Analysis {
 	private float[] frequencies;
 	private Note[] pitches;
 	
-	public Analysis(AudioData audioData) {
+	public SampleAnalysis(AudioData audioData) {
 			
 		this.audioData = audioData;
 		this.byteAudioData = audioData.getRawAudioData();
