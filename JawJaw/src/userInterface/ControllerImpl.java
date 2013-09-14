@@ -21,12 +21,26 @@ public class ControllerImpl implements Controller {
 	public void record() throws IOException{
 		
 		String entry = "";
-				
-		System.out.println("You're ready to start recording! Enter the name of your track to begin: ");
+			
+		System.out.println("You're ready to start recording! First enter the name of your track: ");
+		boolean same = true;
 		
-		//getting the file name from the user
-		String userEnteredName = getUserInput();
-		newFile = new File(AudioData.AUDIO_FOLDER + userEnteredName + ".wav");
+		while(same){
+			//getting the file name from the user
+			String userEnteredName = getUserInput();
+			newFile = new File(AudioData.AUDIO_FOLDER + userEnteredName + ".wav");
+			
+			if(newFile.exists()){
+				System.out.println("It looks like a track with that name already exists, would you like to overwrite the existing track? (y/n)");
+				String yn = getUserInput();
+				
+				if(yn.equals("y") || yn.equals("Y")){
+					same = false;
+				} else {
+					System.out.println("Please enter the name of your track: ");
+				}
+			} else same = false;
+		}
 		
 		//getting the tempo the metronome should play at from the user
 		System.out.println("What tempo would you like to record at?");
@@ -43,14 +57,14 @@ public class ControllerImpl implements Controller {
 		}
 
 		//starting up the thread to record user input with the given metronome and key
-		Runnable theRecorder = new RecordingModule(newFile, tempoNum);
+		Runnable theRecorder = new Recorder(newFile, tempoNum);
 		Thread recordingThread = new Thread(theRecorder);
 		recordingThread.start();
 		
 		//stops recording on user input
 		entry = getUserInput();
 		if(entry!= null){
-				RecordingModule stopper = (RecordingModule) theRecorder;
+				Recorder stopper = (Recorder) theRecorder;
 				stopper.getLine().close();
 		}
 		
@@ -70,7 +84,7 @@ public class ControllerImpl implements Controller {
 				 break;
 			 } else {
 				 try{
-					Runnable playback = new PlaybackModule(entry + ".wav");
+					Runnable playback = new Playback(entry + ".wav");
 					Thread playbackThread = new Thread(playback);
 					playbackThread.run();
 				 } catch (RuntimeException ex){
@@ -83,12 +97,20 @@ public class ControllerImpl implements Controller {
 	
 	public void generate(){
 		
-		System.out.println("Which track would you like to generate accompaniment for? ");
+		boolean done = false;
 		
-		newFile = new File(System.getProperty("user.dir") + "/audio/" + getUserInput() + ".wav");
-
-		PostProcessing generator = new PostProcessing(newFile);
-
+		while(!done){
+			
+			System.out.println("Which track would you like to generate accompaniment for? ");	
+			newFile = new File(System.getProperty("user.dir") + "/audio/" + getUserInput() + ".wav");
+			
+			if(newFile.exists()){
+				PostProcessing generator = new PostProcessing(newFile);
+				done = true;
+			} else{
+				System.out.println("I'm sorry, I could not find that track, please check the name and try again.");
+			}
+		}
 	}
 
 	@Override

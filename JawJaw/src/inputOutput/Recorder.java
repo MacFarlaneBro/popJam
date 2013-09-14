@@ -9,7 +9,7 @@ import storage.AudioData;
 
 
 //running the recording module as a thread allows the stopping of recording with no busywaiting
-public class RecordingModule implements Runnable{
+public class Recorder implements Runnable{
 	
 	private TargetDataLine line = null;
 	private File newFile;
@@ -17,7 +17,7 @@ public class RecordingModule implements Runnable{
 	private double tempo;
 		
 	//assigning the user named and generated file to be recorded to
-	public RecordingModule(File newFile, int tempo){	
+	public Recorder(File newFile, int tempo){	
 		this.newFile = newFile;
 		this.tempo = (double) tempo;
 	}

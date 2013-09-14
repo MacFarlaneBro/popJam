@@ -6,12 +6,12 @@ import java.net.MalformedURLException;
 
 import javax.sound.sampled.*;
 
-public class PlaybackModule implements Runnable {
+public class Playback implements Runnable {
 	
 	private Clip theClip;
 	private boolean fileExists = false;
 	
-    public PlaybackModule(String fileName) {
+    public Playback(String fileName) {
  
     	 try {
                 File file = new File("audio/" + fileName);

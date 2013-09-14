@@ -1,9 +1,14 @@
 package analysis;
 
+
 public class Mode {
 	
-	 public double getMode(double[] pitches){//method for calculating the mode of the pitch array generated
+	//This method is directly adapted from a method provided written by StackOverflow user
+	//Deyan, the link to the source code can be found in the reference page [6]
+	public double getMode(double[] pitches){//method for calculating the mode of the pitch array generated
+		 
 	    double t = 0;
+	    
 	    for(int i=0; i<pitches.length; i++){
 	        for(int j=1; j<pitches.length-i; j++){
 	            if(pitches[j-1] > pitches[j]){
@@ -31,5 +36,4 @@ public class Mode {
 	    }
 	    return mode;
 	}
-
 }
