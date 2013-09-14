@@ -4,7 +4,7 @@ import storage.AudioData;
 import storage.Note;
 import storage.Pitch;
 
-public class SampleAnalysis {
+public class PitchDetection {
 
 	private AudioData audioData;
 	private byte[] byteAudioData;
@@ -15,7 +15,7 @@ public class SampleAnalysis {
 	private float[] frequencies;
 	private Note[] pitches;
 	
-	public SampleAnalysis(AudioData audioData) {
+	public PitchDetection(AudioData audioData) {
 			
 		this.audioData = audioData;
 		this.byteAudioData = audioData.getRawAudioData();
@@ -38,6 +38,8 @@ public class SampleAnalysis {
 		return audioData;
 	}
 
+	//This method is directly modeled the bytesToSample() method in the WaveBuilder.java class
+	//employed by David Cuny in his	program TunaFish, links to which can be found in the reference page
 	private int bytesToSample(int index){
 
 		index*= bytesPerSample;// index *2 
@@ -56,7 +58,9 @@ public class SampleAnalysis {
 		return returner;
 		
 	}
-		
+	
+	//This method is directly modeled the findFrequency() method in the Analysis.java class
+	//employed by David Cuny in his	program TunaFish, links to which can be found in the references
 	private void findFrequencies() {
 		
 		for(int i = 0; i < modifiedSamples.length; i++){		
@@ -107,6 +111,8 @@ public class SampleAnalysis {
 		audioData.setPitches(pitches);
 	}
 	
+	//This method is directly modeled on the autocorrelate() method in the Analysis.java class
+	//employed by David Cuny in his	program TunaFish, links to which can be found in the reference page
 	private int autoCorrelation(int index, int windowWidth) {
 
 		double max = -1;

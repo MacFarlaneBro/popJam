@@ -1,4 +1,4 @@
-package synth;
+package accompaniment;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -130,71 +130,6 @@ public class AccompanimentGenerator {
 		synth.stop();
 	}
 		
-//	public File playOutput(Note[] notes, String fileName){
-//			
-//		double sumTime = 0;
-//		if(record){
-//			try 
-//			{	
-//				//removing the wav suffix before renaming the file
-//				for(int i = 0; i < fileName.length(); i++){
-//					if(fileName.charAt(i)=='.'){
-//						fileName = fileName.substring(0, i);
-//					}
-//				}
-//				synthFile = new File(AudioData.AUDIO_FOLDER + fileName + "synth.wav");
-//				recorder = new WaveRecorder(synth, synthFile);
-//				
-//				osc.output.connect(0, recorder.getInput(), 0);
-//				osc.output.connect(0, recorder.getInput(), 1);
-//			} 
-//			catch (FileNotFoundException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		
-//			try {
-//				int i = 0;
-//				osc.frequency.set(0, 0.5, synth.getCurrentTime());
-//				int sumTimeInt;
-//				while(notes[i]!= null)
-//				{	
-//					sumTimeInt = (int)  sumTime;
-//					osc.frequency.set(notes[i].getFrequency(), sumTimeInt);
-//					sumTime += notes[i].getTime();
-//					sumTimeInt = (int)  sumTime;
-//					osc.frequency.set(notes[i].getFrequency(), sumTimeInt); 
-//					System.out.println("The Time!!: " + sumTime);
-//					i++;
-//				}
-//								
-//				synth.start();
-//				recorder.start();
-//				lineOut.start();
-//
-//				try
-//				{
-//					double time = synth.getCurrentTime();
-//					// Sleep for a while, this seems to be the only way to allow the thing to play without stopping or requiring input
-//                    synth.sleepUntil( time + sumTime + 1);
-//				} 
-//				catch( InterruptedException e )
-//				{
-//					e.printStackTrace();
-//				}
-//				
-//				lineOut.stop();
-//				recorder.stop();
-//				recorder.close();
-//				osc.stop();
-//				synth.stop();
-//				
-//			} catch (Exception ex){
-//				ex.printStackTrace();
-//			}
-//			
-//			return synthFile;
-//	}
 
 	private int[] getChordInfo(Note[] notes, Scale scale){
 		

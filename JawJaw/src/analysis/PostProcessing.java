@@ -1,12 +1,14 @@
 package analysis;
 
 import inputOutput.WavHandler;
+
 import java.io.File;
+
+import accompaniment.AccompanimentGenerator;
 import storage.AudioData;
 import storage.Note;
 import storage.Pitch;
 import storage.Scale;
-import synth.AccompanimentGenerator;
 
 
 public class PostProcessing {
@@ -42,7 +44,7 @@ public class PostProcessing {
 	private void inputRefinement(){
 		
 		//raw data from the sound file is analysed to produce pitch data
-		SampleAnalysis analyser = new SampleAnalysis(preDetect);
+		PitchDetection analyser = new PitchDetection(preDetect);
 		postDetect = analyser.getData();
 		pitches = postDetect.getPitchArray();
 		

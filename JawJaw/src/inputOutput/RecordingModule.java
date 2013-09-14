@@ -55,7 +55,7 @@ public class RecordingModule implements Runnable{
 
 			Runnable metronome = new Metronome(tempo);
 			Thread metronomeThread = new Thread(metronome);
-			metronomeThread.start();
+			//metronomeThread.start();
 			
 			System.out.println("You're recording has begun, enter any character to finish");
 			

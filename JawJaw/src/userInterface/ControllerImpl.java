@@ -6,10 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-
+import accompaniment.AccompanimentGenerator;
 import analysis.*;
 import storage.AudioData;
-import synth.AccompanimentGenerator;
 import inputOutput.*;
 
 public class ControllerImpl implements Controller {
