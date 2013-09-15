@@ -2,7 +2,6 @@ package userInterface;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -13,10 +12,8 @@ import inputOutput.*;
 
 public class Controller{
 	
-	
 	String holder;
 	File newFile;
-	
 	
 	public void record() throws IOException{
 		
@@ -41,10 +38,19 @@ public class Controller{
 				}
 			} else same = false;
 		}
-		
-		//getting the tempo the metronome should play at from the user
-		System.out.println("What tempo would you like to record at?");
-		int tempoNum = Integer.parseInt(getUserInput());
+		int tempoNum = 0;
+		while(!same){
+			same = true;
+			//getting the tempo the metronome should play at from the user
+			System.out.println("What tempo would you like to record at?");
+			try{
+				
+			tempoNum = Integer.parseInt(getUserInput());
+			} catch (Exception ex){
+				System.out.println("I'm sorry that wasnt a number, please try again.");
+				same = false;
+			}
+		}
 		
 		System.out.println("Finally, would you like a reference note to help tune? (Y/N)");
 		holder = getUserInput();
