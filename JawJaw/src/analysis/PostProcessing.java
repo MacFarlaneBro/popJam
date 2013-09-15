@@ -215,7 +215,9 @@ public class PostProcessing {
 		System.out.println("Pitches: " + pitches.length);
 		
 		synthFile = synth.generateChords(scale, finalGenerationNotes, postDetect.getFileName());
-	
+		
+		System.out.println("I got here!");
+		
 		WavHandler combiner = new WavHandler();
 		combiner.wavCombiner(synthFile, inputFile);
 	}

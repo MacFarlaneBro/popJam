@@ -100,7 +100,6 @@ public class Controller{
 		}
 	}
 
-	
 	public void generate(){
 		
 		boolean done = false;
