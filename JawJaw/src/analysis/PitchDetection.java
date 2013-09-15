@@ -38,7 +38,7 @@ public class PitchDetection {
 		return audioData;
 	}
 
-	//This method is directly modeled the bytesToSample() method in the WaveBuilder.java class
+	//This method is directly modeled on the bytesToSample() method in the WaveBuilder.java class
 	//employed by David Cuny in his	program TunaFish, links to which can be found in the reference page
 	private int bytesToSample(int index){
 
@@ -59,7 +59,7 @@ public class PitchDetection {
 		
 	}
 	
-	//This method is directly modeled the findFrequency() method in the Analysis.java class
+	//This method is directly modeled on the findFrequency() method in the Analysis.java class
 	//employed by David Cuny in his	program TunaFish, links to which can be found in the references
 	private void findFrequencies() {
 		

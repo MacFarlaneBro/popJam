@@ -13,7 +13,7 @@ import com.jsyn.unitgen.*;
 import com.jsyn.util.WaveRecorder;
 import com.softsynth.shared.time.TimeStamp;
 
-public class AccompanimentGenerator {
+public class SynthModule {
 	
 	private Synthesizer synth;
 	private UnitOscillator osc;
@@ -30,7 +30,7 @@ public class AccompanimentGenerator {
 	private double[] lowGenFreq;
 	private String holder;
 	
-	public AccompanimentGenerator()
+	public SynthModule()
 	{
 		synth = JSyn.createSynthesizer();
 		synth.add(osc = new SineOscillator());
@@ -130,8 +130,7 @@ public class AccompanimentGenerator {
 		synth.stop();
 	}
 		
-
-	private int[] getChordInfo(Note[] notes, Scale scale){
+	private int[] getChords(Note[] notes, Scale scale){
 		
 		Note root = scale.getRoot();
 		
@@ -212,7 +211,7 @@ public class AccompanimentGenerator {
 		}
 		
 		
-		int[] relativeDist = getChordInfo(notes, inScale);
+		int[] relativeDist = getChords(notes, inScale);
 		
 		try 
 		{	
@@ -314,10 +313,6 @@ public class AccompanimentGenerator {
 		Note finalHigh;
 		Note finalLow;
 		
-		double random = Math.random()*6;
-		int noteChooser = (int) random;
-		System.out.println("Note Chooser: " + noteChooser);
-		
 		//the following two if/else branches prevent the synthesized notes from being too near the input note
 		if(suffix > 5){
 			highSuffix = ((int) Math.random()*2)+4;
@@ -334,6 +329,11 @@ public class AccompanimentGenerator {
 		
 		//both minor and major triads are built using thirds and fifths so they can use the same constructor framework
 		if(scaleType.equals("minor")||scaleType.equals("major")){
+			
+			double random = Math.random()*6;
+			int noteChooser = (int) random;
+			System.out.println("Note Chooser: " + noteChooser);
+			
 			if(i == 0){
 					
 				if(noteChooser == 0){// random number determines the other two notes generated
@@ -491,43 +491,20 @@ public class AccompanimentGenerator {
 			
 		} else {// if the scale is pentatonic
 			
-			if(i == 0){
-				
-				if(noteChooser == 0){// random number determines the other two notes generated
-					highMod = rootedScale.get(3);
-					lowMod = rootedScale.get(5);
-				} else if(noteChooser == 1){
-					lowMod = rootedScale.get(4);
-					highMod = rootedScale.get(2);
-				} else if(noteChooser == 2){
-					highMod = rootedScale.get(3);
-					lowMod = rootedScale.get(5);
-				} else if(noteChooser == 3){
-					highMod = rootedScale.get(5);
-					lowMod = rootedScale.get(3);
-				} else if(noteChooser == 4){
-					highMod = rootedScale.get(5);
-					lowMod = rootedScale.get(2);
-				} else if(noteChooser == 5){
-					highMod = rootedScale.get(2);
-					lowMod = rootedScale.get(5);
-				}
-				
-				
-		}else if(i == 1){
+			//as no definitive chord construction frameworks such as triads exist for the minor pentatonic scale
+			//and the scale has less chance for dissonance the other two notes generated are entirely random
+			double random = Math.random()*4;
+			int noteChooser = (int) random;
+			System.out.println("Note Chooser: " + noteChooser);
 			
-		}else if(i == 2){
+			highMod = rootedScale.get(noteChooser);
 			
-		}else if(i == 3){
+			random = Math.random()*4;
+			noteChooser = (int) random;
+			System.out.println("Note Chooser: " + noteChooser);
 			
-		}else if(i == 4){
-			
-		}else if(i == 5){
-			
-		}else if(i == 6){
-			
-		}
-			
+			lowMod = rootedScale.get(noteChooser);
+
 		}
 		
 		if(highMod.getPitch().length() ==3){//if the note is sharp take the first two characters, otherwise just the first character

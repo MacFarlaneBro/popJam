@@ -4,7 +4,7 @@ import inputOutput.WavHandler;
 
 import java.io.File;
 
-import accompaniment.AccompanimentGenerator;
+import accompaniment.SynthModule;
 import storage.AudioData;
 import storage.Note;
 import storage.Pitch;
@@ -23,7 +23,7 @@ public class PostProcessing {
 	private double[] noteTimer;//the length of time each note in averageNotes occurs for in the order in which they occur
 	private Note[] postModeNotes;//every note (excluding nulls)
 	
-	private AccompanimentGenerator synth;//The synthesizer used to generate the accompaniment
+	private SynthModule synth;//The synthesizer used to generate the accompaniment
 	private double[] pitchSampleGroup = new double[10];//the size of this array determines the number of non null pitches and therefore the time over which the average pitches is calculated
 	private int nonNullPitches;//the total number of non null pitches
 	private int arraySize;//the smaller average pitch is, the larger arraySize needs to be
@@ -197,7 +197,7 @@ public class PostProcessing {
 			i++;
 		}
 		
-		synth = new AccompanimentGenerator();
+		synth = new SynthModule();
 
 		int s = 0;
 		int t = 0;

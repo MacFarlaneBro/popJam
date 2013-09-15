@@ -1,10 +1,9 @@
 package analysis;
 
-
 public class Mode {
 	
 	//This method is directly adapted from a method provided written by StackOverflow user
-	//Deyan, the link to the source code can be found in the reference page [6]
+	//Deyan, the link to the source code can be found in the reference page [14]
 	public double getMode(double[] pitches){//method for calculating the mode of the pitch array generated
 		 
 	    double t = 0;

@@ -10,7 +10,7 @@ public class Launcher {
 				
 		String entry = "";	
 				
-		Controller theControl = new ControllerImpl();
+		Controller theControl = new Controller();
 		
 		while(!entry.equals("exit")){
 		entry = "";	
