@@ -57,11 +57,12 @@ public class Recorder implements Runnable{
 			Thread metronomeThread = new Thread(metronome);
 			metronomeThread.start();
 			
-			System.out.println("You're recording has begun, enter any character to finish");
-			
 			line.start();		
-			System.out.println("Start recording");
 			AudioInputStream ais = new AudioInputStream(line);
+			
+			System.out.println("");
+			System.out.println("---------------------------------------------------------");
+			System.out.println("You're recording has begun, enter any character to finish");
 			
 			//the user named file is written to
 			AudioSystem.write(ais, AudioData.FILETYPE, newFile);

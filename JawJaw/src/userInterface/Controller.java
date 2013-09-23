@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import accompaniment.SynthModule;
 import analysis.*;
 import storage.AudioData;
+import storage.Pitch;
 import inputOutput.*;
 
 public class Controller{
@@ -56,10 +57,19 @@ public class Controller{
 		holder = getUserInput();
 		if(holder.equals("y")||holder.equals("Y"))
 		{	
-			System.out.println("Which note would you like to use as a reference?");
-			holder = getUserInput();
-			SynthModule gen = new SynthModule();
-			gen.playPitch(holder);
+			same = true;
+			while(same){
+				Pitch pitch = new Pitch();
+				System.out.println("Which note would you like to use as a reference?");
+				holder = getUserInput();
+				if(pitch.getFrequency(holder) != 1.00){
+					same = false;
+					SynthModule gen = new SynthModule();
+					gen.playPitch(holder);
+				} else {
+					System.out.println("please try again using the Scientific Pitch Notation (e.g. 'A5')");
+				}
+			}
 		}
 
 		//starting up the thread to record user input with the given metronome and key
@@ -81,22 +91,15 @@ public class Controller{
 	public void play() throws IOException{
 		
 		String entry = "";
-
-		while(!entry.equals("exit")){
-			System.out.println("Please enter the name of the audio you would like to play (type exit to exit)");
+		System.out.println("Please enter the name of the audio you would like to play ");
 			
-			 entry = getUserInput();
-			 if(entry.equals("exit")){
-				 break;
-			 } else {
-				 try{
-					Runnable playback = new Playback(entry + ".wav");
-					Thread playbackThread = new Thread(playback);
-					playbackThread.run();
-				 } catch (RuntimeException ex){
-					 ex.printStackTrace();
-				 }
-			 }
+		entry = getUserInput();
+	    try{
+			Runnable playback = new Playback(entry + ".wav");
+			Thread playbackThread = new Thread(playback);
+			playbackThread.run();
+		} catch (RuntimeException ex){
+			 ex.printStackTrace();
 		}
 	}
 
@@ -106,13 +109,16 @@ public class Controller{
 		
 		while(!done){
 			
-			System.out.println("Which track would you like to generate accompaniment for? ");	
-			newFile = new File(System.getProperty("user.dir") + "/audio/" + getUserInput() + ".wav");
+			System.out.println("Which track would you like to generate accompaniment for? (to exit, type 'exit')");	
+			String trackName = getUserInput();
+			newFile = new File(System.getProperty("user.dir") + "/audio/" + trackName + ".wav");
 			
 			if(newFile.exists()){
 				PostProcessing generator = new PostProcessing(newFile);
 				done = true;
-			} else{
+			} else if(trackName.equals("exit")){
+					done = true;
+			} else {
 				System.out.println("I'm sorry, I could not find that track, please check the name and try again.");
 			}
 		}

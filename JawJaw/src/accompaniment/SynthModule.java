@@ -168,11 +168,12 @@ public class SynthModule {
 			}
 			i++;
 		}
-		
+		i = 1;
 		int[] distancesFromRoot = new int[finalNotes.size()];
 		int l = 0;
 		for(int j = 0; j < finalNotes.size(); j++){//this determines the individual note values in the context of the scale
 			Note newNote = finalNotes.get(j);
+			System.out.println(newNote.getPitch());
 			
 			for(int k = 0; k < scaleNotes.size(); k++)
 			{//finding the distance between the root and the current note
@@ -221,7 +222,7 @@ public class SynthModule {
 					fileName = fileName.substring(0, i);
 				}
 			}
-			synthFile = new File(AudioData.AUDIO_FOLDER + fileName + "synth.wav");
+			synthFile = new File(AudioData.AUDIO_FOLDER + fileName + "A.wav");
 			recorder = new WaveRecorder(synth, synthFile);
 			
 			osc.output.connect(0, recorder.getInput(), 0);
@@ -265,8 +266,9 @@ public class SynthModule {
 			osc2.noteOff(new TimeStamp(sumTime + 1));
 			
 			System.out.println(sumTime);
+			System.out.println("----------------------------------");
 			System.out.println("");
-			System.out.println("press any key to play:");
+			System.out.println("press any key to and the accompaniment file will start to play, immediately followed by accompaniment + input:");
 			
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 			holder = in.readLine();

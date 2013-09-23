@@ -98,7 +98,7 @@ public class WavHandler{
 				}
 			}
 			
-			synthFile = new File(AudioData.AUDIO_FOLDER + fileName + "combined.wav");
+			synthFile = new File(AudioData.AUDIO_FOLDER + fileName + "C.wav");
 			recorder = new WaveRecorder(synth, synthFile);
 			
 			samplePlayer.output.connect(0, recorder.getInput(), 0);

@@ -70,7 +70,7 @@ public class Metronome implements Runnable{
 		
 		catch( InterruptedException e )
 		{
-			System.out.println("The metronome thread has been interrupted as I don't know how else to stop it");
+			System.out.println("Metronome has closed");
 		} finally {
 			
 			//making sure all the line outs, oscillators and synths have ceased function before exiting
