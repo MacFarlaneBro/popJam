@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/Users/charliebrodie/Downloads/Project/Libraries/jtransforms-2.4.jar"/>
-	<classpathentry kind="lib" path="/Users/charliebrodie/Downloads/Project/Libraries/jsyn-beta-16.5.14.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Library/Java/Extensions/jsyn-beta-16.5.14.jar"/>
+	<classpathentry kind="lib" path="/Library/Java/Extensions/jtransforms-2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

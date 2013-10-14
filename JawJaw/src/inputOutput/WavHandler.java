@@ -1,13 +1,16 @@
 package inputOutput;
 
 import java.io.*;
+
 import com.jsyn.*;
 import com.jsyn.data.FloatSample;
+import com.jsyn.ports.ConnectableInput;
 import com.jsyn.unitgen.LineOut;
 import com.jsyn.unitgen.VariableRateMonoReader;
 import com.jsyn.unitgen.VariableRateStereoReader;
 import com.jsyn.util.SampleLoader;
 import com.jsyn.util.WaveRecorder;
+import com.softsynth.jsyn.AddUnit;
 
 import javax.sound.sampled.*;
 
@@ -70,6 +73,9 @@ public class WavHandler{
 		FloatSample sample2;
 		
 		try {
+			
+//			AddUnit mixer = new AddUnit();
+			
 			sample = SampleLoader.loadFloatSample(synthFile);
 			sample2 = SampleLoader.loadFloatSample(inputFile);
 		
@@ -79,8 +85,14 @@ public class WavHandler{
 			synth.add(samplePlayer);
 			synth.add(samplePlayer2);
 			
+			System.out.println(sample.getFrameRate());
+			System.out.println(sample2.getFrameRate());
+	
 			samplePlayer.rate.set(sample.getFrameRate());
 			samplePlayer2.rate.set(sample2.getFrameRate());
+			
+//			samplePlayer.output.connect(0, mixer.inputA, 0);
+//			samplePlayer.output.connect(1, mixer.inputB, 1);
 			
 			samplePlayer2.dataQueue.queue(sample2);
 			samplePlayer.dataQueue.queue(sample);

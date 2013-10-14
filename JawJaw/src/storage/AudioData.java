@@ -6,7 +6,7 @@ import javax.sound.sampled.AudioFormat;
 public class AudioData {
 	
 	public static final AudioFileFormat.Type FILETYPE = AudioFileFormat.Type.WAVE;
-	public static final AudioFormat FORMAT = new AudioFormat(22050, 16, 1, true, true);
+	public static final AudioFormat FORMAT = new AudioFormat(44100, 16, 1, true, true);
 	public static final int SAMPLE_SIZE = 16000;
 	public static final int WINDOW_SIZE = 1024; //The amount of data samples each FFT will use
 	public static final int SAMPLE_RATE = 22050;
