@@ -1,4 +1,4 @@
-package applet;
+package gui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import userInterface.Controller;
 
 @SuppressWarnings("serial")
 public class ControllerJPanel extends JPanel implements ActionListener{
@@ -16,11 +15,13 @@ public class ControllerJPanel extends JPanel implements ActionListener{
 	private JButton generateAccompaniment;
 	private JButton getSampleMelody;
 	private GuiPanel selectedInstance;
-	private WebGui startingPane;
+	private JFrame topLevel;
 	
-	public ControllerJPanel(){
+	public ControllerJPanel(JFrame jFrame){
 		
-		super(new GridLayout(4, 5));	
+		super(new GridLayout(4,5));
+		
+		this.topLevel = jFrame;
 		
 		setOpaque(true);
 						
@@ -51,22 +52,24 @@ public class ControllerJPanel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == record)
 		{
-			selectedInstance = new RecorderPanel();
+			selectedInstance = new RecorderPanel(this, new GridLayout(4,2));
 			System.out.println("buttonClicked!");
 		}
 		else if(e.getSource() == play)
 		{
-			selectedInstance = new PlayPanel();
+			selectedInstance = new PlayPanel(this, new FlowLayout());
 		}
 		else if(e.getSource() == generateAccompaniment)
 		{
-			selectedInstance = new AccompanimentPanel();
+			selectedInstance = new AccompanimentPanel(this, new FlowLayout());
 		}
 		else if(e.getSource() == getSampleMelody)
 		{
-			selectedInstance = new SamplePanel();
+			selectedInstance = new SamplePanel(this, new GridLayout(4,2));
 		}
 		
-		this.add(selectedInstance);
+		topLevel.add(selectedInstance);
+		selectedInstance.setVisible(true);
+		this.setVisible(false);
 	}
 }

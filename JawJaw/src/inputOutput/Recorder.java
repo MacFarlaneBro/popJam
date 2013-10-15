@@ -64,8 +64,13 @@ public class Recorder implements Runnable{
 			System.out.println("---------------------------------------------------------");
 			System.out.println("You're recording has begun, enter any character to finish");
 			
+			System.out.println("here");
+
 			//the user named file is written to
+			System.out.println("here");
+
 			AudioSystem.write(ais, AudioData.FILETYPE, newFile);
+			System.out.println("here");
 			metronomeThread.interrupt();
 			
 		} catch (IOException e) {

@@ -13,7 +13,7 @@ import com.jsyn.unitgen.*;
 import com.jsyn.util.WaveRecorder;
 import com.softsynth.shared.time.TimeStamp;
 
-public class SynthModule {
+public class SynthModule{
 	
 	private Synthesizer synth;
 	private UnitOscillator osc;
@@ -71,7 +71,7 @@ public class SynthModule {
 			}
 	}
 	
-	public void melodyGenerator(String root, double bpm, String scaleType){
+	public void melodyGenerator(String root, int bpm, String scaleType){
 
 		Scale scale = new Scale(new Note(root));
 		scale.setScale(scaleType);
@@ -112,15 +112,10 @@ public class SynthModule {
 		lineOut.start();
 		lineOut2.start();
 		lineOut3.start();
-		
-		try{
-			System.out.print("Press any key to exit melody: ");
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-			holder = bufferedReader.readLine();
-		} catch (IOException ex){
-			ex.printStackTrace();
-		}
-		
+
+	}
+	
+	public void stopper(){
 		lineOut.stop();
 		lineOut2.stop();
 		lineOut3.stop();
@@ -530,4 +525,5 @@ public class SynthModule {
 		
 		System.out.println("New Chord!");
 	}
+
 }

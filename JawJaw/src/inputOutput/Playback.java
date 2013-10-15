@@ -48,12 +48,12 @@ public class Playback implements Runnable {
     }
     
     public void play(){
-    	
-        theClip.start();
+    	theClip.start();
     }
 
     public void stop(){
         theClip.stop();
+        theClip.setMicrosecondPosition(0);
     }
     
 	@Override

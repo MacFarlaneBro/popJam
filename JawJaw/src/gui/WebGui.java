@@ -1,4 +1,4 @@
-package applet;
+package gui;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -20,7 +20,7 @@ public class WebGui {
         greenMenuBar.setBackground(new Color(154, 165, 127));
         greenMenuBar.setPreferredSize(new Dimension(200, 20));
  
-        ControllerJPanel panel = new ControllerJPanel();
+        ControllerJPanel panel = new ControllerJPanel(frame);
         panel.setOpaque(true);
         panel.setBackground(Color.darkGray);
         panel.setPreferredSize(new Dimension(500, 300));
